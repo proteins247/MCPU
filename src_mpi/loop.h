@@ -56,13 +56,13 @@ void integloop(float step_size, int *n_soln)
   res_atomno[nresidues] = natoms;
 //  fprintf(STATUS,"info:%d %d\n", nresidues, natoms);
     
-  sel_res = (int) (drand48()*nresidues);
+  sel_res = (int) (threefryrand()*nresidues);
 //  sel_res = 20;
-  mc.is_phi = (int) (drand48()*2);
+  mc.is_phi = (int) (threefryrand()*2);
 //  mc.is_phi = 1;
 //fprintf(STATUS,"%f\n", deg2rad*2.);
   step_size = YANG_SCALE*2.*deg2rad*GaussianNum();
-//  step_size = drand48()*1.0*pi - 0.5*pi;
+//  step_size = threefryrand()*1.0*pi - 0.5*pi;
 //  step_size = 0.;
 
   if (mc.is_phi)
@@ -670,7 +670,7 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 //       fprintf(STATUS,"\nsoln no.: %d   min. rmsd:%7.3f\n", index+1, min_value);
        if(*n_soln>0)
         {
-         index = (int) (drand48()*(*n_soln));
+         index = (int) (threefryrand()*(*n_soln));
          if(index>=(*n_soln))
           {
            fprintf(STATUS,"ERROR!!!: index %d is greater than equal to no. of solutions %d.\n", index, *n_soln);

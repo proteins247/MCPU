@@ -47,7 +47,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
 	exit(1);
        }
       
-      if (drand48()<CLUSTER_MOVE)
+      if (threefryrand()<CLUSTER_MOVE)
        {
         //fprintf(STATUS, "LoopBackbondMove():\n");
         LoopBackboneMove(step_size);
@@ -57,7 +57,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
        {
         if (YANG_MOVE)
          {
-  	  if (drand48()<YANG_MOVE)
+  	  if (threefryrand()<YANG_MOVE)
 	   {
             //fprintf(STATUS, "integloop():\n");
 	    integloop(step_size, &n_soln);
@@ -142,7 +142,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
       dE = weight_potential*dE_pot + weight_clash*delta_nclashes + weight_hbond*dE_hbond + TOR_WEIGHT*dE_tor + ARO_WEIGHT*dE_aro + SCT_WEIGHT*dE_sct;
       
       /* Metropolis */
-      if (dE <= 0 || drand48() < exp(-(dE)/MC_TEMP)) {
+      if (dE <= 0 || threefryrand() < exp(-(dE)/MC_TEMP)) {
 	Update();
         //fprintf(STATUS, "Updated ...\n");
         //ResetEnergies();
@@ -191,7 +191,7 @@ void LocalBackboneMove(Float step_size) {
   total_hbond_pairs=0;
   nomove = 0;
 
-  mc.sel_res_num = (int)(drand48()*nresidues);
+  mc.sel_res_num = (int)(threefryrand()*nresidues);
   if(is_template[mc.sel_res_num]==1)
    {
     nomove = 1;
@@ -212,7 +212,7 @@ void LocalBackboneMove(Float step_size) {
     mc.is_phi = 0;
   else if (mc.sel_res_num == nresidues-1)
     mc.is_phi = 1;
-  else    mc.is_phi = (int) (drand48()*2);
+  else    mc.is_phi = (int) (threefryrand()*2);
   //fprintf(STATUS,"mainchain move at %5d\n", mc.sel_res_num);
 
   step_size = step_size*GaussianNum();;
@@ -244,7 +244,7 @@ void LoopBackboneMove(Float absolute_step_size) {
 
   /* triplet is selected */
   if (0 == 0) {
-    mc.sel_triplet = (int) (drand48()*TOTAL_TRIPLE_LOOP_MOVES)+TOTAL_SINGLE_LOOP_MOVES+TOTAL_DOUBLE_LOOP_MOVES;
+    mc.sel_triplet = (int) (threefryrand()*TOTAL_TRIPLE_LOOP_MOVES)+TOTAL_SINGLE_LOOP_MOVES+TOTAL_DOUBLE_LOOP_MOVES;
  
     if (residue_triplets[mc.sel_triplet].a > nresidues/2.0) {
       mc.selected[0] = residue_triplets[mc.sel_triplet].a;
@@ -286,7 +286,7 @@ void LoopBackboneMove(Float absolute_step_size) {
 //  ++move_cycle;
 
   check_phipsi();
-  cluster_bin = (int)(NOCLUSTERS*drand48());
+  cluster_bin = (int)(NOCLUSTERS*threefryrand());
 //  mc.selected[i] = 92;
 //  cluster_bin = 1;
   desire_phi = cluster_phi[native_residue[mc.selected[i]].amino_num][cluster_bin];
@@ -309,7 +309,7 @@ void LoopBackboneMove(Float absolute_step_size) {
   if (mc.selected[i] > nresidues/2.0) {
       if (mc.selected[i] != 0 && mc.selected[i] != (nresidues-1) && native_residue[mc.selected[i]].amino_num!=14) {
 	/* can't rotate around a proline phi */
-        if (use_cluster > drand48())
+        if (use_cluster > threefryrand())
          {
           step_phi = desire_phi - cur_phi[mc.selected[i]-1];
           step_phi += GaussianNum()*CLUSTER_NOISE;
@@ -330,7 +330,7 @@ void LoopBackboneMove(Float absolute_step_size) {
         }
       }
       if (mc.selected[i] != 0 && mc.selected[i] != (nresidues-1)) {
-        if (use_cluster > drand48())
+        if (use_cluster > threefryrand())
          {
           step_psi = desire_psi - cur_psi[mc.selected[i]-1];
           step_psi += GaussianNum()*CLUSTER_NOISE;
@@ -352,7 +352,7 @@ void LoopBackboneMove(Float absolute_step_size) {
   }
   else {
       if (mc.selected[i] != 0 && mc.selected[i] != (nresidues-1)) {
-        if (use_cluster > drand48())
+        if (use_cluster > threefryrand())
          {
           step_psi = desire_psi - cur_psi[mc.selected[i]-1];
           step_psi += GaussianNum()*CLUSTER_NOISE;
@@ -372,7 +372,7 @@ void LoopBackboneMove(Float absolute_step_size) {
         }
       } 
       if (mc.selected[i] != 0 && mc.selected[i] != (nresidues-1) && native_residue[mc.selected[i]].amino_num!=14) {
-        if (use_cluster > drand48())
+        if (use_cluster > threefryrand())
          {
           step_phi = desire_phi - cur_phi[mc.selected[i]-1];
           step_phi += GaussianNum()*CLUSTER_NOISE;
@@ -457,10 +457,10 @@ void MakeSidechainMove() {
   float p_0to1;
   float cummul_prob;
 
-  mc.sel_rotamer = (int) (drand48()*native_residue[mc.sel_res_num].nrotamers);
+  mc.sel_rotamer = (int) (threefryrand()*native_residue[mc.sel_res_num].nrotamers);
   if (USE_ROT_PROB == 1)
    {
-    p_0to1 = drand48()*100;
+    p_0to1 = threefryrand()*100;
     cummul_prob = 0.;
     for(i=0; i<no_chi_list[native_residue[mc.sel_res_num].amino_num]; i++)
      {
@@ -471,7 +471,7 @@ void MakeSidechainMove() {
     sel_no_chi = i;
    }
   else
-   sel_no_chi = (int) (drand48()*no_chi_list[native_residue[mc.sel_res_num].amino_num]);
+   sel_no_chi = (int) (threefryrand()*no_chi_list[native_residue[mc.sel_res_num].amino_num]);
   //fprintf(STATUS,"sidechain move at %5d\n", mc.sel_res_num);
   
   old_rotamer = cur_rotamers[mc.sel_res_num];
@@ -514,7 +514,7 @@ void SidechainMove() {
   total_hbond_pairs=0;
 
   do {
-    mc.sel_res_num = (int) (drand48()*nresidues);
+    mc.sel_res_num = (int) (threefryrand()*nresidues);
   } while (native_residue[mc.sel_res_num].nrotamers <=1 || native_residue[mc.sel_res_num].amino_num==14);
 
   MakeSidechainMove();

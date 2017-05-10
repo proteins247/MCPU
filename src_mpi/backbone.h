@@ -91,7 +91,7 @@ float seq_hb[3][20][20];
 int   helix_sheet;
 
 char  secstr[MAXSEQUENCE];
-char  path_dir[300];
+char  path_dir[500];		/* 300>500 */
 
 /* contact matrices for debugging */
 #if DEBUG
@@ -147,7 +147,7 @@ struct align_cutoff {
   Float b;
 } **align_con_dist;
 Float **align_hard_core;
-char alignment_file[100];
+char alignment_file[500];	/* 100 to 500 vzhao */
 int  nalign, struct_natoms, struct_nresidues;
 short struct_ncontacts, struct_nclashes; 
 struct atom *struct_native; 
@@ -200,10 +200,11 @@ float cluster_phi[20][NOCLUSTERS];
 float cluster_psi[20][NOCLUSTERS];
 
 /* parameter file names */
-char native_file[100], structure_file[100], triplet_file[100], sctorsion_file[100], sec_str_file[100], template_file[100], pdb_out_file[100], amino_data_file[100], rotamer_data_file[100], potential_file[100], atom_type_file[150], helicity_data[200],hydrogen_bonding_data[200];
+/* vzhao: I increased the length limits to 500 from 100/150 for these */
+char native_file[500], structure_file[500], triplet_file[500], sctorsion_file[500], sec_str_file[500], template_file[500], pdb_out_file[500], amino_data_file[500], rotamer_data_file[500], potential_file[500], atom_type_file[500], helicity_data[500],hydrogen_bonding_data[500];
 /* file names added 12DEC02 IAH */
-char min_etot_file[100], min_drms_file[100];
-char aromatic_file[100];
+char min_etot_file[500], min_drms_file[500];
+char aromatic_file[500];
 
 /* MC variables */
 long int mcstep, mcstep_Emin, mcstep_RMSDmin;

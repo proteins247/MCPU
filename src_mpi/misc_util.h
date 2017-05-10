@@ -29,8 +29,8 @@ Float GaussianNum() {
     
     do {
       
-      v1 = 2.0*drand48()-1.0; 
-      v2 = 2.0*drand48()-1.0;
+      v1 = 2.0*threefryrand()-1.0; 
+      v2 = 2.0*threefryrand()-1.0;
       
       rsq = v1*v1+v2*v2;
 

@@ -172,9 +172,9 @@ here:
 //     ! rotate randomly : rn(3,3), rca(3,3), rc(3,3)
 //     ! random rotation axis:
 //     x = random()
-    x = drand48();
+    x = threefryrand();
 //     y = sqrt(1.0d0 - x*x)*random()
-    y = sqrt(1.0e0 - x*x)*drand48();
+    y = sqrt(1.0e0 - x*x)*threefryrand();
 //     z = sqrt(1.0d0 - x*x - y*y)
     z = sqrt(1.0e0 - x*x - y*y);
 //     ran_axis(1:3) = (/ x, y, z /)
@@ -182,7 +182,7 @@ here:
     ran_axis[1] = y;
     ran_axis[2] = z;
 //     ran_angle = two_pi*random()
-    ran_angle = 2.*PI*drand48();
+    ran_angle = 2.*PI*threefryrand();
 //     call quaternion_local(ran_axis, 0.25d0*ran_angle, ran_q)
     quaternion(ran_axis, 0.25*ran_angle, ran_q);
 //     call rotation_matrix_local(ran_q, ran_U)

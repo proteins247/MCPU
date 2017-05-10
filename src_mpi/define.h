@@ -53,6 +53,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <time.h>
+#include "rng.h"
 
 short three[5] = {1, 3, 9, 27, 81};
 static char *at_types[NSMOGTYPES] = {"CA", "C3","C2","CP","CC","OC","OB","OD","NC","ND","NM","SP","ME"};

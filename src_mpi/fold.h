@@ -111,7 +111,7 @@ void Fold(void) {
 
         if(myrank == 0) {
           for(irep=0;irep<MAX_EXCHANGE;irep++){
-            sel_num= (int) (drand48()*(nprocs-2));
+            sel_num= (int) (threefryrand()*(nprocs-2));
 
             //fprintf(STATUS,"irep : %d, sel_num : %d\n", irep, sel_num);
             //fflush(STATUS);
@@ -119,7 +119,7 @@ void Fold(void) {
             delta_E = Enode[sel_num+1]-Enode[sel_num];
             delta_T = 1.0/Tnode[sel_num+1]-1.0/Tnode[sel_num];
             delta_all = delta_E * delta_T;
-            if(delta_all >= 0 || drand48() < expf(delta_all)){
+            if(delta_all >= 0 || threefryrand() < expf(delta_all)){
               itmp=replica_index[sel_num];
               replica_index[sel_num]=replica_index[sel_num+1];
               replica_index[sel_num+1]=itmp;

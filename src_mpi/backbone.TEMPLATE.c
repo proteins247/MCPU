@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
   char std_file[500];
 
   /* OUTPUT FILE PREFIX */
-  const char std_prefix[] = "/n/regal/shakhnovich_lab/vzhao/project__chimera/MCPU_600ns_min_structures/s_dysgalactiae_MCPU/run_50/s_dysgalactiae_mdsim1_600ns_frame500_min_protOnlyNoH_0.100_Emin";
+  const char std_prefix[] = "VAR_OUTPUT";
 
   /* MINIMUM TEMPERATURE */
   MC_TEMP_MIN = 0.100;
@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
   SetProgramOptions(argc,argv);
 
   seed = time(NULL); 
-  seed += (int) (MC_TEMP*1000) + getpid() + myrank;
+  seed += (int) (MC_TEMP*1000) + getpid();
   // srand48(seed);
-  set_threefry_array((unsigned long int) seed);
+  set_threefry_array((unsigned long int) seed);  
   //fprintf(STATUS,"nprocs = %d, myrank = %d\n",nprocs,myrank);
   fprintf(STATUS,"---GENERAL---\n");
   fprintf(STATUS,"  seed:\t\t%ld\n\n", seed);

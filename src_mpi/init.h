@@ -1217,9 +1217,9 @@ void CheckCorrelation(struct contact_data **Data, struct atom *Protein, struct r
 
 void SetProgramOptions(int argc, char *argv[]) {
   
-  char line[150];
+  char line[500];		/* increased to 500 from 150 */
   char token[50];
-  char name[50];
+  char name[500];		/* increased to 500 from 50 */
   float value;
   int find_yang_move = 0;
   int find_yang_scale = 0;
@@ -1273,7 +1273,8 @@ void SetProgramOptions(int argc, char *argv[]) {
   fprintf(STATUS,"myrank : %4d, cfg_file : %s\n", myrank, cfg_file);
   fflush(STATUS);
 
-  while(fgets(line,150,DATA) != NULL) {
+  /* increased from 150 to 500 */
+  while(fgets(line,500,DATA) != NULL) {
     /* fprintf(STATUS,"%s",line);*/
     if(strncmp(line,"!",1)){
       sscanf(line,"%s %f",token,&value);

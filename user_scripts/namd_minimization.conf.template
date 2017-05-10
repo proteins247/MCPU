@@ -1,0 +1,45 @@
+# NAMD configuration file
+
+# molecular system
+structure	XXXINPSF
+coordinates	XXXINPDB
+
+#output
+outputname	XXXOUTROOT
+dcdfreq		1000
+
+# force field
+paratypecharmm	on
+parameters	par_all27_prot_lipid.inp
+exclude		scaled1-4
+1-4scaling	1.0
+
+# approximations
+switching	on
+switchdist	8
+cutoff		12
+pairlistdist	13.5
+margin		0
+stepspercycle	20
+
+#integrator
+timestep 1.0
+
+#output
+outputenergies	10
+outputtiming	100
+binaryoutput	no
+
+
+#protocol
+temperature	0
+reassignFreq	1000
+reassignTemp	25
+reassignIncr	25
+reassignHold	300
+
+#script
+
+minimize 5000
+
+#run 2000

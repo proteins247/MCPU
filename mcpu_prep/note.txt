@@ -1,0 +1,1 @@
+recompiled save_triple with g++ -O3 -o save_triple save_triple.c to get working executable

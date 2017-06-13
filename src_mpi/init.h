@@ -1227,13 +1227,14 @@ void SetProgramOptions(int argc, char *argv[]) {
   char cfg_file[200];
   int l=0, ls, MPI_STOP=0;
 
+  /* Acquire cfg_file name */
   memset(cfg_file,'\0',200);
   if(myrank == 0) {
     strcpy(cfg_file,argv[1]);
     if(argc != 2) {
-      fprintf(STATUS,"ERROR!!! Usage is like this: ./fold_potential config_file, argc : %d\n", argc);
+      printf("ERROR!!! Usage is like this: ./fold_potential config_file, argc : %d\n", argc);
       for(l=0;l<argc;l++){
-        fprintf(STATUS,"argc : %3d, argv : %s\n", l, argv[l]);
+        printf("argc : %3d, argv : %s\n", l, argv[l]);
       }
       MPI_STOP=1;
     }
@@ -1248,34 +1249,17 @@ void SetProgramOptions(int argc, char *argv[]) {
     ierr=MPI_Bcast(cfg_file,200,MPI_CHAR,0,mpi_world_comm);
   }
 
-  Tnode = (float *) calloc(nprocs,sizeof(float));
-  Enode = (float *) calloc(nprocs,sizeof(float));
-
-  replica_index = (int *) calloc(nprocs,sizeof(int));
-  accepted_replica = (int *) calloc(nprocs,sizeof(int));
-  rejected_replica = (int *) calloc(nprocs,sizeof(int));
-
-  for(l=0;l<nprocs;l++){
-    accepted_replica[l]=rejected_replica[l]=0;
-  }
-
+  /* open cfg file */
   if((DATA = fopen(cfg_file,"r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", cfg_file);
+    printf("ERROR: Can't open the file: %s!\n", cfg_file);
     exit(1);
    }
- 
-  fprintf(STATUS,"Temperature range for replica exchange!\n");
-  for(l=0;l<nprocs;l++){
-    Tnode[l]=MC_TEMP_MIN + l*0.1;
-    fprintf(STATUS,"%4d : %5.3f\n", l, Tnode[l]);
-  }
-  fprintf(STATUS,"myrank : %4d, cfg_file : %s\n", myrank, cfg_file);
-  fflush(STATUS);
 
+  /* acquire params from cfg file */
   /* increased from 150 to 500 */
   while(fgets(line,500,DATA) != NULL) {
-    /* fprintf(STATUS,"%s",line);*/
+    /* printf("%s",line);*/
     if(strncmp(line,"!",1)){
       sscanf(line,"%s %f",token,&value);
       if (!strcmp(token,"NATIVE_FILE")) {
@@ -1321,6 +1305,7 @@ void SetProgramOptions(int argc, char *argv[]) {
       else if (!strcmp(token,"PDB_OUT_FILE")) {
 	sscanf(line,"%*s %s",name);
 	strcpy(pdb_out_file,name);
+	strcpy(std_prefix,name);
  	ls = strlen(name);
         sprintf(pdb_out_file+ls,"_%5.3f", MC_TEMP);
       }
@@ -1417,7 +1402,31 @@ void SetProgramOptions(int argc, char *argv[]) {
     }
   }
   
-  fclose(DATA);
+  fclose(DATA);			/* close cfg file */
+
+  /* SET name of log file and OPEN it for business */
+  sprintf(std_file,"%s_%5.3f.log",std_prefix,MC_TEMP);  
+  STATUS=fopen(std_file,"w");	/* for some reason, old code gave file handle the name STATUS */
+
+  /* establish some ladder/replica exchange items */
+  Tnode = (float *) calloc(nprocs,sizeof(float));
+  Enode = (float *) calloc(nprocs,sizeof(float));
+
+  replica_index = (int *) calloc(nprocs,sizeof(int));
+  accepted_replica = (int *) calloc(nprocs,sizeof(int));
+  rejected_replica = (int *) calloc(nprocs,sizeof(int));
+
+  for(l=0;l<nprocs;l++){
+    accepted_replica[l]=rejected_replica[l]=0;
+  }
+
+  fprintf(STATUS,"Temperature range for replica exchange!\n");
+  for(l=0;l<nprocs;l++){
+    Tnode[l]=MC_TEMP_MIN + l*0.1;
+    fprintf(STATUS,"%4d : %5.3f\n", l, Tnode[l]);
+  }
+  fprintf(STATUS,"myrank : %4d, cfg_file : %s\n", myrank, cfg_file);
+  fflush(STATUS);
 
   if (find_yang_move == 0)
    {

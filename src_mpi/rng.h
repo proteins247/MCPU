@@ -8,7 +8,7 @@ using an algorithm from the Random123 library.
 Initialize by calling set_threefry_array with a user-supplied
 seed. 
 
-For multi-threaded situations, the user-supplied seed should
+For multi-processing situations, the user-supplied seed should
 be different for each thread if one seeks to avoid having
 the same stream of random numbers for each thread/process.
 

@@ -3,10 +3,6 @@
 int main(int argc, char *argv[]) {
 
   int i;
-  char std_file[500];
-
-  /* OUTPUT FILE PREFIX */
-  const char std_prefix[] = "/n/regal/shakhnovich_lab/vzhao/project__chimera/MCPU_600ns_min_structures/s_dysgalactiae_MCPU/run_50/s_dysgalactiae_mdsim1_600ns_frame500_min_protOnlyNoH_0.100_Emin";
 
   /* MINIMUM TEMPERATURE */
   MC_TEMP_MIN = 0.100;
@@ -16,8 +12,6 @@ int main(int argc, char *argv[]) {
     exit(1);
   }
 
-  /* initialize data */
-
   /* MPI initialization */
   MPI_Init(&argc,&argv);
   mpi_world_comm = MPI_COMM_WORLD;
@@ -25,16 +19,15 @@ int main(int argc, char *argv[]) {
   MPI_Comm_rank(mpi_world_comm, &myrank);
 
   MC_TEMP = MC_TEMP_MIN + myrank*0.10;// Temperature for this processor
-  sprintf(std_file,"%s_%5.3f.log",std_prefix,MC_TEMP);  
 
-  STATUS=fopen(std_file,"w");
-
+  /* initialize data */
   SetProgramOptions(argc,argv);
+  /* Note: fopen(std_file,"w") has been put into SetProgramOptions */
 
   seed = time(NULL); 
-  seed += (int) (MC_TEMP*1000) + getpid() + myrank;
+  seed += (int) (MC_TEMP*1000) + getpid();
   // srand48(seed);
-  set_threefry_array((unsigned long int) seed);
+  set_threefry_array((unsigned long int) seed);  
   //fprintf(STATUS,"nprocs = %d, myrank = %d\n",nprocs,myrank);
   fprintf(STATUS,"---GENERAL---\n");
   fprintf(STATUS,"  seed:\t\t%ld\n\n", seed);

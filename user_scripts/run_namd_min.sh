@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./run_namd_min.sh structure_input_directory output_directory template
+# ./run_namd_min.sh structure_input_directory output_directory
 # Minimization for multiple structures in one directory
 # single core
 
@@ -12,7 +12,7 @@ module add hpc/namd-2.9
 
 input_directory=$1
 output_directory=$2
-template=$3
+template=/n/home00/vzhao/opt/MCPU/user_scripts/namd_minimization.conf.template
 
 if [ ! -d "${output_directory}" ]; then
     echo "Output directory does not exist, exiting"
@@ -32,6 +32,6 @@ for pdb in ${input_directory}/*pdb; do
 	< "$template" \
 	> "${output_directory}/namd_minimization_${fileroot}.conf"
 
-    sbatch -p shakhnovich -n 1 -t 360 -o ${output_directory}/${fileroot}.log \
+    sbatch -p shakgpu -n 1 -t 360 -o ${output_directory}/${fileroot}.log \
     	   --wrap "namd2 ${output_directory}/namd_minimization_${fileroot}.conf"
 done

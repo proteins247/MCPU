@@ -1,5 +1,15 @@
 #!/bin/bash
 
+HELP="run_MCPU.sh [options] structure output_directory
+  Options:
+    -h : help
+    -n NPROC : specify number of processors and indirectly
+               specify the size of the temperature ladder
+    -N NRUNS : specify number of runs to do
+    -l LEN   : number of steps in a run
+    -e EVERY : save structures for every specified trajectories
+    -o FREQ  : save structures every FREQ steps
+"
 # ./run_MCPU.sh structure output_directory
 echo run_MCPU.sh; echo
 <<"EOF"
@@ -27,12 +37,6 @@ starting temperature being 0.1. So -n 32 is 0.2 to 3.2
 @author: victor zhao yzhao01@g.harvard.edu
 EOF
 
-# Modules
-source new-modules.sh
-module purge
-module load gcc/6.3.0-fasrc01
-module load openmpi/2.1.0-fasrc01
-
 # fixed params:
 MCPU_PATH=/n/home00/vzhao/opt/MCPU
 
@@ -46,25 +50,26 @@ MCPU_BACKBONE_TEMPLATE=${MCPU_PATH}/src_mpi/backbone.TEMPLATE.c
 # backbone.h char* variables for filenames have been lengthened to 500
 # init.h reading cfg file can accomodate 500 chars/line as opposed to 150
 
-PARTITION=shakhnovich
+: ${PARTITION:=shakhnovich}
 MEMPERCPU=2048
 ALLOCTIME=1440			# 24 hours
 NPROC=32
 NRUNS=1
-LENGTH=10000000                 # old default 2 million
+LENGTH=2000000
 EVERY=10
-OUTFREQ=1000
+OUTFREQ=100000                  # print pdb file freq
 
 # input arguments
-while getopts ":n:N:l:e:o:" opt; do
-  case $opt in
-      n) echo "Using $OPTARG processors"; NPROC=$OPTARG; ;;
-      N) echo "Number of runs: $OPTARG"; NRUNS=$OPTARG; ;;
-      l) echo "Length of run: $OPTARG"; LENGTH=$OPTARG; ;;
-      e) echo "Save every $OPTARG trajectories"; EVERY=$OPTARG; ;;
-      o) echo "Output every $OPTARG steps"; OUTFREQ=$OPTARG; ;;
-      \?) echo "Invalid option: -$OPTARG" >&2; ;;
-  esac
+while getopts ":hn:N:l:e:o:" opt; do
+    case $opt in
+        h) echo "$HELP" >&2; exit ;;
+        n) echo "Using $OPTARG processors"; NPROC=$OPTARG; ;;
+        N) echo "Number of runs: $OPTARG"; NRUNS=$OPTARG; ;;
+        l) echo "Length of run: $OPTARG"; LENGTH=$OPTARG; ;;
+        e) echo "Save every $OPTARG trajectories"; EVERY=$OPTARG; ;;
+        o) echo "Output pdb every $OPTARG steps"; OUTFREQ=$OPTARG; ;;
+        \?) echo "Invalid option: -$OPTARG" >&2; ;;
+    esac
 done
 shift $((OPTIND-1))
 
@@ -92,11 +97,22 @@ if [ ! -d "${output_directory}" ]; then
 fi
 output_directory=$(readlink -f ${output_directory})
 
+# --------------------------------------------------
+# Modules
+source new-modules.sh
+module purge
+module load gcc/6.3.0-fasrc01
+module load openmpi/2.1.0-fasrc01
+
 # Begin --------------------------------------------------
 
 # preprocess pdb
 # this modifies PDB file in place!!!!!!!!!!!!!
-/n/home00/vzhao/opt/MCPU/user_scripts/add_chain_name.py "${input_protein}"
+if [ $(grep ATOM < "${input_protein}" | awk '{print $5}' | wc -L) -gt 1 ]; then
+   echo "suspecting that protein chain identifier is missing."
+   echo "running add_chain_name.py to add it"
+   /n/home00/vzhao/opt/MCPU/user_scripts/add_chain_name.py "${input_protein}"
+fi
 
 # generate required files
 # FASTA sequence from PDB
@@ -123,7 +139,7 @@ echo $(head -c $n_residues < /dev/zero | tr '\0' 'C' ) \
      >> "${input_prefix}.sec_str"
 echo "Created ${input_prefix}.sec_str"
 
-# run save_triple
+# run save_triple (slowest part of this script)
 echo "Running save_triple"
 cp "${input_prefix}.fasta" ${MCPU_PATH}/mcpu_prep
 echo "change directory: ${MCPU_PATH}/mcpu_prep"; cd ${MCPU_PATH}/mcpu_prep
@@ -157,25 +173,31 @@ for ((i=0; i<$NRUNS; i++)); do
 	< $MCPU_CFG_TEMPLATE \
 	> $MCPU_PATH/src_mpi/cfg
     echo "Created protein-specific $MCPU_PATH/src_mpi/cfg"
-    sed \
-	-e "s:VAR_OUTPUT:${subdirectory}/${fileroot}:" \
-	< $MCPU_BACKBONE_TEMPLATE \
-	> $MCPU_PATH/src_mpi/backbone.c
-    echo "Created protein specific $MCPU_PATH/src_mpi/backbone.c"
+
+    # sed \
+    #     -e "s:VAR_OUTPUT:${subdirectory}/${fileroot}:" \
+    #     < $MCPU_BACKBONE_TEMPLATE \
+    #     > $MCPU_PATH/src_mpi/backbone.c
+    # echo "Created protein specific $MCPU_PATH/src_mpi/backbone.c"
 
     rm -fv "${subdirectory}/nothing.template"
     touch "${subdirectory}/nothing.template"
     echo "Created ${subdirectory}/nothing.template"
 
-    # now compile and run
-    echo "Compile"
-    echo "change directory: $MCPU_PATH/src_mpi"; cd $MCPU_PATH/src_mpi
-    mpicc -O3 -o ${subdirectory}/fold_potential_mpi backbone.c -lm
-    cp -v cfg ${subdirectory}
+    # old way:
+    # # now compile and run
+    # echo "Compile"
+    # echo "change directory: $MCPU_PATH/src_mpi"; cd $MCPU_PATH/src_mpi
+    # mpicc -O3 -o ${subdirectory}/fold_potential_mpi backbone.c -lm
+    # cp -v cfg ${subdirectory}
+
+    # new way, no compilation, copy program and run
+    cp -v $MCPU_PATH/src_mpi/cfg ${subdirectory}
+    cp -v $MCPU_PATH/src_mpi/fold_potential_mpi ${subdirectory}
 
     echo "change directory: $subdirectory"; cd $subdirectory
 	
-    echo "Compiled. Now running."
+    echo "Now run program."
     sbatch -p $PARTITION -n $NPROC -t $ALLOCTIME --mem-per-cpu $MEMPERCPU \
 	   -J "MCPU_R${i}_${fileroot}" \
 	   -o "submit_MCPU_${fileroot}_run${i}.log" \
@@ -195,6 +217,6 @@ configured properly.
 3. Edit configuration files to taste
 4. I think some configuration settings have to be left at run time?
 5. define.h parameters probably are fine?
-6. Each time to run software needs separate compilation?
+6. Each time to run software needs separate compilation? # no longer
 
 NOTES

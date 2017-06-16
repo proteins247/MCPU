@@ -1,4 +1,10 @@
 #!/bin/bash
+<<EOF
+run_psfgen.sh
+
+generates topology files for pdb files in a directory.
+
+EOF
 
 # ./run_psfgen.sh structure_input_directory output_directory
 echo run_psfgen.sh; echo
@@ -8,7 +14,7 @@ module add vmd/1.9.1-fasrc01
 
 input_directory=$1
 output_directory=$2
-template=$3
+template="/n/home00/vzhao/opt/MCPU/user_scripts/generate_topo_template.pgn"
 
 if [ ! -d "${output_directory}" ]; then
     echo "Output directory does not exist, exiting"
@@ -22,7 +28,7 @@ for pdb in ${input_directory}/*pdb; do
     sed \
 	-e s:INPDBXXX:${pdb}: \
 	-e s:OUTPSFXXX:"${output_directory}/${fileroot}.psf": \
-	-e s:OUTPDBXXX:"${output_directory}/${fileroot}.pdf": \
+	-e s:OUTPDBXXX:"${output_directory}/${fileroot}.pdb": \
 	< "$template" \
 	> generate_topo.pgn
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ./extract_minimized_structure.sh structure_dir trajectory_dir output_dir template
+# ./extract_minimized_structure.sh structure_dir trajectory_dir output_dir
 
 <<'EOF'
 
@@ -19,7 +19,7 @@ module add vmd/1.9.1-fasrc01
 structure_directory=$1
 trajectory_directory=$2
 output_directory=$3
-template=$4
+template=/n/home00/vzhao/opt/MCPU/user_scripts/EXTRACT_PDB.TCL.template
 
 if [ ! -d "${output_directory}" ]; then
     echo "Output directory does not exist, exiting"

@@ -201,6 +201,7 @@ float cluster_psi[20][NOCLUSTERS];
 
 /* parameter file names */
 /* vzhao: I increased the length limits to 500 from 100/150 for these */
+char std_file[500], std_prefix[500]; /* vzhao: added these here from backbone.c */
 char native_file[500], structure_file[500], triplet_file[500], sctorsion_file[500], sec_str_file[500], template_file[500], pdb_out_file[500], amino_data_file[500], rotamer_data_file[500], potential_file[500], atom_type_file[500], helicity_data[500],hydrogen_bonding_data[500];
 /* file names added 12DEC02 IAH */
 char min_etot_file[500], min_drms_file[500];

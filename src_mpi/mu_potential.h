@@ -30,7 +30,7 @@ void OutputNab (char *file_name) {
 
   if((Nab_file = fopen(file_name, "w"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", file_name);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", file_name);
     exit(1);
    }
   for (i = 0; i < MAX_TYPES; ++i)
@@ -52,13 +52,13 @@ void OutputPotential (void) {
   int i, j;
   char potential_name[200], Nab_file_name[200];
 
-  sprintf(Nab_file_name, "%s_Nab",PROTEIN_NAME);
+  sprintf(Nab_file_name, "%s_Nab", PROTEIN_NAME);
   OutputNab(Nab_file_name);
 
-  sprintf(potential_name, "%s_potential_%.3f",PROTEIN_NAME,mu);
+  sprintf(potential_name, "%s_potential_%.3f", PROTEIN_NAME, mu);
   if((temp_file = fopen(potential_name, "w"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", potential_name);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", potential_name);
     exit(1);
    }
   for (i = 0; i < MAX_TYPES; ++i)

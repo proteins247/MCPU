@@ -24,15 +24,15 @@ void loop_Jacobian(double r_n[3][3], double r_ca[3][3], double r_c[3][3], double
 
 //  m = 0
   m = 0;
-  for(i=0;i<6;i++)
-    for(k=0;k<6;k++)
+  for (i=0;i<6;i++)
+    for (k=0;k<6;k++)
       j[i][k] = 0.;
                                                                                                                            
 //  rn(:,:) = r_n(:,:)
 //  rca(:,:) = r_ca(:,:)
 //  rc(:,:) = r_c(:,:)
-  for(i=0;i<3;i++)
-    for(k=0;k<3;k++)
+  for (i=0;i<3;i++)
+    for (k=0;k<3;k++)
      {
       rn[i][k] = r_n[i][k];
       rca[i][k] = r_ca[i][k];
@@ -48,7 +48,7 @@ here:
 //  n = 0
   n = 0;
 //  do i = 1, 3
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
 //     ! phi
 //     n = n + 1
@@ -118,7 +118,7 @@ here:
 //  do n = 1, 4
 //     call cross_local(axis(:,n), r_ca3(:) - pivot(:,n), j(1:3,n))
 //  end do
-  for(n=0;n<4;n++)
+  for (n=0;n<4;n++)
    {
     arg_a[0] = r_ca3[0] - pivot[n][0];
     arg_a[1] = r_ca3[1] - pivot[n][1];
@@ -132,7 +132,7 @@ here:
 //  do n = 1, 5
 //     call cross_local(axis(:,n), r_cac3(:), j(4:6,n))
 //  end do
-  for(n=0;n<5;n++)
+  for (n=0;n<5;n++)
    {
     cross(axis[n], r_cac3, arg_b);
     j[n][3] = arg_b[0];
@@ -145,7 +145,7 @@ here:
 //       +(j(c2,5)*j(c1,2) - j(c1,5)*j(c2,2)) * det3(j(1:3,1), j(1:3,3), j(1:3,4)) &
 //       -(j(c2,5)*j(c1,3) - j(c1,5)*j(c2,3)) * det3(j(1:3,1), j(1:3,2), j(1:3,4)) &
 //       +(j(c2,5)*j(c1,4) - j(c1,5)*j(c2,4)) * det3(j(1:3,1), j(1:3,2), j(1:3,3)) 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     va_1[i] = j[1][i];
     va_2[i] = j[2][i];
@@ -192,12 +192,12 @@ here:
 //        rca(:,i) = matmul(ran_U, rca(:,i))
 //        rc(:,i) = matmul(ran_U, rc(:,i))
 //     end do
-   for(i=0;i<3;i++)
+   for (i=0;i<3;i++)
     {
      matmul(ran_U, rn[i], pro_rn);
      matmul(ran_U, rca[i], pro_rca);
      matmul(ran_U, rc[i], pro_rc);
-     for(k=0;k<3;k++)
+     for (k=0;k<3;k++)
       {
        rn[i][k] = pro_rn[k];
        rca[i][k] = pro_rca[k];

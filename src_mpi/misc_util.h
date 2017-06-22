@@ -10,7 +10,7 @@ Float Tiny(Float x) {
 void squeeze(char s[], int c) {
 
    int i, j;
-   for(i = j= 0; s[i] != '\0'; i++)
+   for (i = j= 0; s[i] != '\0'; i++)
      if (s[i] != c)
        s[j++] = s[i];
    s[j] = '\0';
@@ -23,7 +23,7 @@ Float GaussianNum() {
   static int iset=0;
   static Float gset;
   
-  Float fac,rsq,v1,v2;
+  Float fac, rsq, v1, v2;
   
   if (iset==0) {
     

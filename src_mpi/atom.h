@@ -14,7 +14,7 @@ struct atom {
   short is_designed;
   short is_sidechain;
   short sec_structure;
-  unsigned char X,Y,Z;
+  unsigned char X, Y, Z;
   struct cell *matrix;
 };
 
@@ -39,6 +39,7 @@ struct residue {
 
 void CopyAtom(struct atom, struct atom *);
 
+/* copy from protein1 to protein2 */
 void CopyAtom(struct atom protein1, struct atom *protein2) {
   
   (*protein2).X = protein1.X;
@@ -56,8 +57,8 @@ void CopyAtom(struct atom protein1, struct atom *protein2) {
   (*protein2).is_core = protein1.is_core;
   (*protein2).is_designed = protein1.is_designed;
   (*protein2).is_sidechain = protein1.is_sidechain;
-  strcpy((*protein2).res,protein1.res);
-  strcpy((*protein2).atomname,protein1.atomname);
+  strcpy((*protein2).res, protein1.res);
+  strcpy((*protein2).atomname, protein1.atomname);
   (*protein2).matrix = protein1.matrix;
   (*protein2).sec_structure = protein1.sec_structure;
   return;

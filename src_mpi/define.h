@@ -56,7 +56,7 @@
 #include "rng.h"
 
 short three[5] = {1, 3, 9, 27, 81};
-static char *at_types[NSMOGTYPES] = {"CA", "C3","C2","CP","CC","OC","OB","OD","NC","ND","NM","SP","ME"};
+static char *at_types[NSMOGTYPES] = {"CA", "C3", "C2", "CP", "CC", "OC", "OB", "OD", "NC", "ND", "NM", "SP", "ME"};
 
-static char *ATOMNAME[NUM_ATOMNAMES] = {"C","CA","CB","CD","CD1","CD2","CE","CE1","CE2","CE3","CG","CG1","CG2","CH2","CZ","CZ2","CZ3","N","ND1","ND2","NE","NE1","NE2","NZ","O","OCT","OD1","OD2","OE1","OE2","OG","OG1","OH","OXT","SD","SG"};
+static char *ATOMNAME[NUM_ATOMNAMES] = {"C", "CA", "CB", "CD", "CD1", "CD2", "CE", "CE1", "CE2", "CE3", "CG", "CG1", "CG2", "CH2", "CZ", "CZ2", "CZ3", "N", "ND1", "ND2", "NE", "NE1", "NE2", "NZ", "O", "OCT", "OD1", "OD2", "OE1", "OE2", "OG", "OG1", "OH", "OXT", "SD", "SG"};
 

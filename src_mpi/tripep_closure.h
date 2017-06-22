@@ -123,10 +123,10 @@ void matmul(double ma[3][3], double mb[3], double mc[3])
  {
   int i, j;
 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     mc[i] = 0.;
-    for(j=0;j<3;j++)
+    for (j=0;j<3;j++)
       mc[i] += ma[i][j]*mb[j];
    }
   return;
@@ -214,17 +214,17 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
   initialize_sturm(&tol_secant, &max_iter_sturm, &max_iter_secant);
 
 //  len0(1:6) = b_len(1:6)
-  for(i=0;i<6;i++)
+  for (i=0;i<6;i++)
     len0[i] = b_len[i];
 //  b_ang0(1:7) = b_ang(1:7)
-  for(i=0;i<7;i++)
+  for (i=0;i<7;i++)
     b_ang0[i] = b_ang[i];
 //  t_ang0(1:2) = t_ang(1:2)
-  for(i=0;i<2;i++)
+  for (i=0;i<2;i++)
     t_ang0[i] = t_ang[i];
 
 //  rr_c1(1:3) = 0.0d0
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     rr_c1[i] = 0.;
 //  axis(1:3) = (/ 1.0d0, 0.0d0, 0.0d0 /)
   axis[0] = 1.;
@@ -232,7 +232,7 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
   axis[2] = 0.;
 
 //  do i = 0, 1
-  for(i=0;i<2;i++)
+  for (i=0;i<2;i++)
    {
 //     rr_a1(1:3) = (/ cos(b_ang0(3*i+2))*len0(3*i+1), sin(b_ang0(3*i+2))*len0(3*i+1), 0.0d0 /)
      rr_a1[0] = cos(b_ang0[3*i+1])*len0[3*i];
@@ -243,7 +243,7 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
      rr_n2[1] = 0.0e0;
      rr_n2[2] = 0.0e0;
 //     rr_c1a1(:) = rr_a1(:) - rr_c1(:)
-     for(j=0;j<3;j++)
+     for (j=0;j<3;j++)
        rr_c1a1[j] = rr_a1[j] - rr_c1[j];
 //     rr_n2a2_ref(1:3) = (/ -cos(b_ang0(3*i+3))*len0(3*i+3), sin(b_ang0(3*i+3))*len0(3*i+3), 0.0d0 /)
      rr_n2a2_ref[0] = -cos(b_ang0[3*i+2])*len0[3*i+2];
@@ -257,7 +257,7 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
 //     rr_a1a2(:) = rr_a2(:) - rr_a1(:)
 //     dr(:) = rr_a1a2(:)
      matmul(Us, rr_n2a2_ref, mulpro);
-     for(j=0;j<3;j++)
+     for (j=0;j<3;j++)
       {
        rr_a2[j] =  mulpro[j] + rr_n2[j];
        rr_a1a2[j] = rr_a2[j] - rr_a1[j];
@@ -273,7 +273,7 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
 //     bb_c1a1(:) = rr_c1a1(:)/len0(3*i+1)
 //     bb_a1a2(:) = rr_a1a2(:)/len1
 //     bb_a2n2(:) = (rr_n2(:) - rr_a2(:))/len0(3*i+3)
-     for(j=0;j<3;j++)
+     for (j=0;j<3;j++)
       {
        bb_c1a1[j] = rr_c1a1[j]/len0[3*i];
        bb_a1a2[j] = rr_a1a2[j]/len1;
@@ -281,12 +281,12 @@ void initialize_loop_closure(double b_len[6], double b_ang[7], double t_ang[2])
       }
 //     ! xi
 //     call calc_bnd_ang(-bb_a1a2, bb_a2n2, xi(i+2))
-     for(j=0;j<3;j++)
+     for (j=0;j<3;j++)
        tmp_val[j] = -bb_a1a2[j];
      calc_bnd_ang(tmp_val, bb_a2n2, &xi[i+1]);
 //     ! eta
 //     call calc_bnd_ang(bb_a1a2, -bb_c1a1, eta(i+1))
-     for(j=0;j<3;j++)
+     for (j=0;j<3;j++)
        tmp_val[j] = -bb_c1a1[j];
      calc_bnd_ang(bb_a1a2, tmp_val, &eta[i]);
 //     ! delta: pi -  dih of N(1)CA(1)CA(3)C(3)
@@ -340,7 +340,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 
 //  ! vertual bond
 //  r_a1a3(:) = r_a3(:) - r_a1(:) 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     r_a1a3[i] = r_a3[i] - r_a1[i]; 
 //  dr_sqr = dot_product(r_a1a3,r_a1a3)
   dr_sqr = dot_product(r_a1a3,r_a1a3);
@@ -361,7 +361,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 
 //  ! bond lengths
 //  r_a1n1(:) = r_n1(:) - r_a1(:)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     r_a1n1[i] = r_n1[i] - r_a1[i];
 //  len_na(1) = sqrt(dot_product(r_a1n1,r_a1n1))
   len_na[0] = sqrt(dot_product(r_a1n1,r_a1n1));
@@ -370,7 +370,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 //  len_na(3) = len0(6)
   len_na[2] = len0[5];
 //  r_a3c3(:) = r_c3(:) - r_a3(:)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     r_a3c3[i] = r_c3[i] - r_a3[i];
 //  len_ac(1) = len0(1)
   len_ac[0] = len0[0];
@@ -383,7 +383,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 //  b_a1n1(:) = r_a1n1(:)/len_na(1)
 //  b_a3c3(:) = r_a3c3(:)/len_ac(3)
 //  b_a1a3(:) = r_a1a3(:)/len_aa(1)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     b_a1n1[i] = r_a1n1[i]/len_na[0];
     b_a3c3[i] = r_a3c3[i]/len_ac[2];
@@ -392,7 +392,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 
 //  ! delta(3): dih of N(1)CA(1)CA(3)C(3)
 //  call calc_dih_ang(-b_a1n1, b_a1a3, b_a3c3, delta(3))
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     tmp_val[i] = -b_a1n1[i];
   calc_dih_ang(tmp_val, b_a1a3, b_a3c3, &delta[3]);
 //  delta(0) = delta(3)
@@ -400,7 +400,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 
 //  ! xi(1) 
 //  call calc_bnd_ang(-b_a1a3, b_a1n1, xi(1))
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     tmp_val[i] = -b_a1a3[i];
   calc_bnd_ang(tmp_val, b_a1n1, &xi[0]);
  
@@ -409,7 +409,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
   calc_bnd_ang(b_a1a3, b_a3c3, &eta[2]);
 
 //  do i = 1, 3
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
 //     cos_delta(i) = cos(delta(i))
      cos_delta[i+1] = cos(delta[i+1]);
@@ -447,7 +447,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 //  do i = 1, 3
 //     cos_theta(i) = cos(theta(i))
 //  end do
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     cos_theta[i] = cos(theta[i]);
 
 //  ! alpha 
@@ -488,7 +488,7 @@ void get_input_angles(int *n_soln, double r_n1[3], double r_a1[3], double r_a3[3
 
 //  ! check for existence of soln
 //  do i = 1, 3
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
 //     call test_two_cone_existence_soln(theta(i), xi(i), eta(i), alpha(i), &
 //          n_soln, cone_type)
@@ -641,7 +641,7 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
 
 //  ! A0, B0
 //  do i = 1, 3
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
 //     A0 = cos_alpha(i)*cos_xi(i)*cos_eta(i) - cos_theta(i)
     A0 = cos_alpha[i]*cos_xi[i]*cos_eta[i] - cos_theta[i];
@@ -704,7 +704,7 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
   C2[i][1] = B6[i];
   C2[i][2] = B8[i];
 //  do i = 2, 3
-  for(i=1;i<3;i++)
+  for (i=1;i<3;i++)
    {
 //     C0(0:2,i) = (/ B0(i), B1(i), B4(i) /)
     C0[i][0] = B0[i];
@@ -723,7 +723,7 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
 
 //  ! first determinant
 //  do i = 0, 2
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
 //     u11(i,0) = C0(i,1)
      u11[0][i] = C0[0][i];
@@ -763,19 +763,19 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
   poly_mul_sub2(u11, um5, u31, um6, p1, p_um5, p3, p_um6, q_tmp, p_Q);
 
 //  Q(0:4,0:4) = q_tmp(0:4,0:4)
-  for(i=0;i<5;i++)
-    for(j=0;j<5;j++)
+  for (i=0;i<5;i++)
+    for (j=0;j<5;j++)
       Q[i][j] = q_tmp[i][j];
 
 //  ! second determinant
 //  R(:,:) = 0.0d0
-  for(i=0;i<3;i++)
-    for(j=0;j<17;j++)
+  for (i=0;i<3;i++)
+    for (j=0;j<17;j++)
       R[i][j] = 0.;
 //  R(0:2,0) = C0(0:2,3)
 //  R(0:2,1) = C1(0:2,3)
 //  R(0:2,2) = C2(0:2,3)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     R[0][i] = C0[2][i];
     R[1][i] = C1[2][i];
@@ -859,7 +859,7 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
 //     poly_coeff(0:16) = -poly_coeff(0:16) 
 //  end if
   if (poly_coeff[16] < 0.0e0)
-    for(i=0;i<17;i++)
+    for (i=0;i<17;i++)
      poly_coeff[i] *= -1.0; 
 
 //  if (print_level > 0) then
@@ -871,7 +871,7 @@ void get_poly_coeff(double poly_coeff[deg_pol+1])
   if (print_level > 0)
    {
      fprintf(STATUS,"poly_coeff\n");
-     for(i=0;i<17;i++)
+     for (i=0;i<17;i++)
         fprintf(STATUS,"%5d%15.6f\n", i, poly_coeff[i]);
    }
 
@@ -917,10 +917,10 @@ void poly_mul2(double u1[5][5], double u2[5][5], int p1[2], int p2[2], double u3
   double u1ij;
 
 //  p3(:) = p1(:) + p2(:)
-  for(i=0;i<2;i++)
+  for (i=0;i<2;i++)
     p3[i] = p1[i] + p2[i];
-  for(i=0;i<5;i++)
-    for(j=0;j<5;j++)
+  for (i=0;i<5;i++)
+    for (j=0;j<5;j++)
       u3[i][j] = 0.0e0;
 
 //  p11 = p1(1)
@@ -933,15 +933,15 @@ void poly_mul2(double u1[5][5], double u2[5][5], int p1[2], int p2[2], double u3
   p22 = p2[1];
 
 //  do i1 = 0, p12
-  for(i1=0;i1<=p12;i1++)
+  for (i1=0;i1<=p12;i1++)
    {
 //     do j1 = 0, p11
-     for(j1=0;j1<=p11;j1++)
+     for (j1=0;j1<=p11;j1++)
       {
 //        u1ij = u1(j1,i1)
         u1ij = u1[i1][j1];
 //        do i2 = 0, p22
-	for(i2=0;i2<=p22;i2++)
+	for (i2=0;i2<=p22;i2++)
 	 {
 //           i3 = i1 + i2
            i3 = i1 + i2;
@@ -991,14 +991,14 @@ void poly_sub2(double u1[5][5], double u2[5][5], int p1[2], int p2[2], double u3
   p3[1] = max(p12,p22);
 
 //  do i = 0, p3(2)
-  for(i=0;i<=p3[1];i++)
+  for (i=0;i<=p3[1];i++)
    {
 //     i1_ok = (i > p12)
     i1_ok = (i > p12);
 //     i2_ok = (i > p22)
     i2_ok = (i > p22);
 //     do j = 0, p3(1)
-    for(j=0;j<=p3[0];j++)
+    for (j=0;j<=p3[0];j++)
      {
 //        if (i2_ok .or. (j > p21)) then
 //           u3(j,i) = u1(j,i)
@@ -1062,16 +1062,16 @@ void poly_mul1(double u1[17], double u2[17], int p1, int p2, double u3[17], int 
 //  p3 = p1 + p2
   *p3 = p1 + p2;
 //  u3(:) = 0.0d0
-  for(i=0;i<17;i++)
+  for (i=0;i<17;i++)
     u3[i] = 0.;
 
 //  do i1 = 0, p1
-  for(i1=0;i1<=p1;i1++)
+  for (i1=0;i1<=p1;i1++)
    {
 //     u1i = u1(i1)
     u1i = u1[i1];
 //     do i2 = 0, p2
-    for(i2=0;i2<=p2;i2++)
+    for (i2=0;i2<=p2;i2++)
      {
 //        i3 = i1 + i2
         i3 = i1 + i2;
@@ -1101,7 +1101,7 @@ void poly_sub1(double u1[17], double u2[17], int p1, int p2, double u3[17], int 
   *p3 = max(p1, p2);
 
 //  do i = 0, p3
-  for(i=0;i<=*p3;i++)
+  for (i=0;i<=*p3;i++)
    {
 //     if (i > p2) then
 //        u3(i) = u1(i)
@@ -1161,20 +1161,20 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 
 //  ! Define body frame (ex, ey, ez)
 //  ex(:) = b_a1a3(:)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     ex[i] = b_a1a3[i];
 //  call cross(r_a1n1, ex, ez)
   cross(r_a1n1, ex, ez);
 //  ez(:) = ez(:)/sqrt(dot_product(ez,ez))
   tmp_value = sqrt(dot_product(ez,ez));
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     ez[i] = ez[i]/tmp_value;
 //  call cross(ez, ex, ey)
   cross(ez, ex, ey);
 //  ! vertual bond vectors in the reference plane
 //  b_a1a2(:) = -cos_alpha(1)*ex(:) + sin_alpha(1)*ey(:)
 //  b_a3a2(:) = cos_alpha(3)*ex(:) + sin_alpha(3)*ey(:)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     b_a1a2[i] = -cos_alpha[0]*ex[i] + sin_alpha[0]*ey[i];
     b_a3a2[i] = cos_alpha[2]*ex[i] + sin_alpha[2]*ey[i];
@@ -1188,7 +1188,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //  p_t(:,1) = b_a1a2(:)
 //  t1(:,1)  = ez(:)  ! s1
 //  t2(:,1)  = sin_alpha(1)*ex(:) + cos_alpha(1)*ey(:) ! p_t X t1
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     p_s[0][i] = -ex[i];
     s1[0][i]  = ez[i];
@@ -1204,7 +1204,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //  p_t(:,2) = -b_a3a2(:)
 //  t1(:,2)  = -ez(:)
 //  t2(:,2)  = sin_alpha(3)*ex(:) - cos_alpha(3)*ey(:) 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     p_s[1][i] = -b_a1a2[i];
     s1[1][i]  = -ez[i];
@@ -1220,7 +1220,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //  p_t(:,3) = ex(:)
 //  t1(:,3) =  ez(:) 
 //  t2(:,3) = -ey(:) 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     p_s[2][i] = b_a3a2[i];
     s2[2][i]  = t2[1][i]; 
@@ -1238,8 +1238,8 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //     t1_s(:,i)  =  t1(:,i)*sin_eta(i)
 //     t2_s(:,i)  =  t2(:,i)*sin_eta(i)
 //  end do
-  for(i=0;i<3;i++)
-    for(j=0;j<3;j++)
+  for (i=0;i<3;i++)
+    for (j=0;j<3;j++)
      {
       p_s_c[i][j] = p_s[i][j]*cos_xi[i];
       s1_s[i][j]  = s1[i][j]*sin_xi[i];
@@ -1251,7 +1251,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 
 //  ! initial sig(1)
 //  r_tmp(:) = (r_a1n1(:)/len_na(1) - p_s_c(:,1))/sin_xi(1)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     r_tmp[i] = (r_a1n1[i]/len_na[0] - p_s_c[0][i])/sin_xi[0];
 //  call calc_bnd_ang(s1(:,1), r_tmp, angle)
   calc_bnd_ang(s1[0], r_tmp, &angle);
@@ -1263,7 +1263,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //  r_a(:,2) = r_a1(:) + len_aa(2)*b_a1a2(:)
 //  r_a(:,3) = r_a3(:)
 //  r0(:) = r_a1(:)
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
    {
     r_a[0][i] = r_a1[i];
     r_a[1][i] = r_a1[i] + len_aa[1]*b_a1a2[i];
@@ -1272,7 +1272,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
    }
 
 //  do i_soln = 1, n_soln 
-  for(i_soln=0;i_soln<*n_soln;i_soln++)
+  for (i_soln=0;i_soln<*n_soln;i_soln++)
    {
 //     half_tan(3) = roots(i_soln)
      half_tan[2] = roots[i_soln];
@@ -1286,7 +1286,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //        cos_tau(i) = (1.0d0 - ht*ht)/tmp
 //        sin_tau(i) = 2.0d0*ht/tmp
 //     end do
-     for(i=1;i<=3;i++)
+     for (i=1;i<=3;i++)
       {
        ht = half_tan[i-1];
        tmp = 1.0e0 + ht*ht;
@@ -1304,7 +1304,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //        cos_sig(i) = cos_delta(j)*cos_tau(j) + sin_delta(j)*sin_tau(j)
 //        sin_sig(i) = sin_delta(j)*cos_tau(j) - cos_delta(j)*sin_tau(j)
 //     end do
-     for(i=0;i<3;i++)
+     for (i=0;i<3;i++)
       {
        cos_sig[i] = cos_delta[i]*cos_tau[i] + sin_delta[i]*sin_tau[i];
        sin_sig[i] = sin_delta[i]*cos_tau[i] - cos_delta[i]*sin_tau[i];
@@ -1315,8 +1315,8 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //        r_n(:,i) = r_s(:)*len_na(i) + r_a(:,i)
 //        r_c(:,i) = r_t(:)*len_ac(i) + r_a(:,i)
 //     end do
-    for(i=0;i<3;i++)
-      for(j=0;j<3;j++)
+    for (i=0;i<3;i++)
+      for (j=0;j<3;j++)
        {
         r_s[j] = p_s_c[i][j] + cos_sig[i]*s1_s[i][j] + sin_sig[i]*s2_s[i][j];
         r_t[j] = p_t_c[i][j] + cos_tau[i+1]*t1_s[i][j] + sin_tau[i+1]*t2_s[i][j];
@@ -1345,7 +1345,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //     r_soln_n(:,3,i_soln) = matmul(Us, r_n(:,3) - r0(:)) + r0(:)
 //     r_soln_a(:,3,i_soln) = r_a3(:)
 //     r_soln_c(:,3,i_soln) = r_c3(:)
-     for(i=0;i<3;i++)
+     for (i=0;i<3;i++)
       {
        mat11[i] = r_c[0][i]-r0[i];
        mat22[i] = r_n[1][i]-r0[i];
@@ -1358,7 +1358,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
      matmul(Us,mat33,mat3);
      matmul(Us,mat44,mat4);
      matmul(Us,mat55,mat5);
-     for(i=0;i<3;i++)
+     for (i=0;i<3;i++)
       {
        r_soln_n[i_soln][0][i] = r_n1[i];
        r_soln_a[i_soln][0][i] = r_a1[i];
@@ -1388,7 +1388,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 //        rr_n3a3(:) = r_soln_a(:,3,i_soln) - r_soln_n(:,3,i_soln)
 //        rr_a1a2(:) = r_soln_a(:,2,i_soln) - r_soln_a(:,1,i_soln)
 //        rr_a2a3(:) = r_soln_a(:,3,i_soln) - r_soln_a(:,2,i_soln)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	 {
           rr_a1c1[i] = r_soln_c[i_soln][0][i] - r_soln_a[i_soln][0][i];
           rr_c1n2[i] = r_soln_n[i_soln][1][i] - r_soln_c[i_soln][0][i];
@@ -1427,25 +1427,25 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
         fprintf(STATUS,"aa: a1a2, a2a3 = %9.3f%9.3f%9.3f%9.3f\n", len_aa[1], a1a2, len_aa[2], a2a3);
 
 //        call calc_bnd_ang(b_a1a3, rr_a1a2/a1a2, a3a1a2)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	  tmp_array[i] = rr_a1a2[i]/a1a2;
         calc_bnd_ang(b_a1a3, tmp_array, &a3a1a2);
 //        call calc_bnd_ang(rr_a2a3/a2a3, b_a1a3, a2a3a1)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	  tmp_array[i] = rr_a2a3[i]/a2a3;
         calc_bnd_ang(tmp_array, b_a1a3, &a2a3a1);
 //        write(*,"('alpha1, alpha3 = ', 2f9.3)") (pi-a3a1a2)*rad2deg, (pi-a2a3a1)*rad2deg
         fprintf(STATUS,"alpha1, alpha3 = %9.3f%9.3f\n", (pi-a3a1a2)*rad2deg, (pi-a2a3a1)*rad2deg);
 //        call calc_bnd_ang(b_a1n1, rr_a1c1/a1c1, n1a1c1)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	  tmp_array[i] = rr_a1c1[i]/a1c1;
         calc_bnd_ang(b_a1n1, tmp_array, &n1a1c1);
 //        call calc_bnd_ang(b_a3c3, -rr_n3a3/n3a3, n3a3c3)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	  tmp_array[i] = -rr_n3a3[i]/n3a3;
         calc_bnd_ang(b_a3c3, tmp_array, &n3a3c3);
 //        call calc_bnd_ang(rr_a2c2/a2c2, -rr_n2a2/n2a2, n2a2c2)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	 {
 	  tmp_array1[i] = rr_a2c2[i]/a2c2;
 	  tmp_array2[i] = -rr_n2a2[i]/n2a2;
@@ -1459,7 +1459,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
         fprintf(STATUS,"ang_nac = %9.3f%9.3f\n", b_ang0[6]*rad2deg, n3a3c3*rad2deg);
 
 //        call calc_dih_ang(rr_a1c1/a1c1, rr_c1n2/c1n2, rr_n2a2/n2a2, a1c1n2a2)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	 {
 	  tmp_array1[i] = rr_a1c1[i]/a1c1;
 	  tmp_array2[i] = rr_c1n2[i]/c1n2;
@@ -1467,7 +1467,7 @@ void coord_from_poly_roots(int *n_soln, double roots[max_soln], double r_n1[3], 
 	 }
         calc_dih_ang(tmp_array1, tmp_array2, tmp_array3, &a1c1n2a2);
 //        call calc_dih_ang(rr_a2c2/a2c2, rr_c2n3/c2n3, rr_n3a3/n3a3, a2c2n3a3)
-	for(i=0;i<3;i++)
+	for (i=0;i<3;i++)
 	 {
 	  tmp_array1[i] = rr_a2c2[i]/a2c2;
 	  tmp_array2[i] = rr_c2n3[i]/c2n3;
@@ -1658,7 +1658,7 @@ void c_bnd_len(double r1[3], double r2[3], double *length)
   double r3[3];
   int i;
 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     r3[i] = r1[i] - r2[i];
    
   *length = sqrt(dot_product(r3, r3));
@@ -1674,7 +1674,7 @@ void c_bnd_ang(double r1[3], double r2[3], double r3[3], double *angle)
   c_bnd_len(r2, r1, &l21);
   c_bnd_len(r2, r3, &l23);
   
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
   {
    r21[i] = (r1[i]-r2[i])/l21;
    r23[i] = (r3[i]-r2[i])/l23;
@@ -1688,7 +1688,7 @@ void c_dih_ang(double r1[3], double r2[3], double r3[3], double r4[3], double *a
   double r12[3], r23[3], r34[3];
   int i;
 
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
   {
    r12[i] = r2[i]-r1[i];
    r23[i] = r3[i]-r2[i];
@@ -1824,20 +1824,20 @@ void get_rot(double obj_i[3], double obj_f[3], double tor1[3], double tor2[3], d
   c_dih_ang(tor1, tor2, tor3, tor4_i, &ang_i);
   c_dih_ang(tor1, tor2, tor3, tor4_f, &ang_f);
   angle = (ang_f - ang_i)*0.25;
-//  for(i=0;i<3;i++)
+//  for (i=0;i<3;i++)
 //    fprintf(STATUS,"%9.3f%9.3f\n", obj_i[i], tor4_i[i]);
    
   c_bnd_len(tor2, tor3, &vec_len);
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     vec_rot[i] = (tor3[i] - tor2[i])/vec_len;
 	
   quaternion(vec_rot, angle, p);
   rotation_matrix(p, Us);
   
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     mat11[i] = obj_i[i] - tor3[i];
   matmul(Us,mat11,mat1);
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     obj_f[i] = mat1[i] + tor3[i];
 
   return;
@@ -1856,20 +1856,20 @@ void driver_rot(double obj_i[3], double obj_f[3], double tor2[3], double tor3[3]
   int i;
   
   angle = dih_change*0.25;
-//  for(i=0;i<3;i++)
+//  for (i=0;i<3;i++)
 //    fprintf(STATUS,"%9.3f%9.3f\n", obj_i[i], tor4_i[i]);
    
   c_bnd_len(tor2, tor3, &vec_len);
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     vec_rot[i] = (tor3[i] - tor2[i])/vec_len;
 	
   quaternion(vec_rot, angle, p);
   rotation_matrix(p, Us);
   
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     mat11[i] = obj_i[i] - tor3[i];
   matmul(Us,mat11,mat1);
-  for(i=0;i<3;i++)
+  for (i=0;i<3;i++)
     obj_f[i] = mat1[i] + tor3[i];
 
   return;

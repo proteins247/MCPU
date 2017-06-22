@@ -38,7 +38,7 @@ void read_pdb_backbone(char pdb_name[], char res_name[5][4], double r_n[5][3], d
 //  open(unit, file = trim(pdb_name))
   if((fpdb=fopen(pdb_name, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", pdb_name);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", pdb_name);
     exit(1);
    }
 //  do    ! exit at ATOM
@@ -58,9 +58,9 @@ void read_pdb_backbone(char pdb_name[], char res_name[5][4], double r_n[5][3], d
 //        ir = res_no - stt_res + 1
 //        res_name(ir) = resname
 //!        print*, ir, atmname
-//        if (atmname == 'N') r_n(:,ir) = (/ x, y, z /)
-//        if (atmname == 'CA') r_a(:,ir) = (/ x, y, z /)
-//        if (atmname == 'C')  r_c(:,ir) = (/ x, y, z /)
+//        if (atmname == 'N') r_n(:, ir) = (/ x, y, z /)
+//        if (atmname == 'CA') r_a(:, ir) = (/ x, y, z /)
+//        if (atmname == 'C')  r_c(:, ir) = (/ x, y, z /)
 //     end if
 //  end do
  // close(unit)
@@ -75,32 +75,32 @@ void read_pdb_backbone(char pdb_name[], char res_name[5][4], double r_n[5][3], d
     if (res_no>=stt_res)
      {
       ir = res_no - stt_res;
-      strcpy(res_name[ir],resname);
-      if(strcmp(atmname,"N")==0)
+      strcpy(res_name[ir], resname);
+      if(strcmp(atmname, "N")==0)
        {
 	r_n[ir][0]=x;
 	r_n[ir][1]=y;
 	r_n[ir][2]=z;
        }
-      else if(strcmp(atmname,"CA")==0)
+      else if(strcmp(atmname, "CA")==0)
        {
 	r_a[ir][0]=x;
 	r_a[ir][1]=y;
 	r_a[ir][2]=z;
        }
-      else if(strcmp(atmname,"C")==0)
+      else if(strcmp(atmname, "C")==0)
        {
 	r_c[ir][0]=x;
 	r_c[ir][1]=y;
 	r_c[ir][2]=z;
        }
-      else if(strcmp(atmname,"O")==0)
+      else if(strcmp(atmname, "O")==0)
        {
 	r_o[ir][0]=x;
 	r_o[ir][1]=y;
 	r_o[ir][2]=z;
        }
-      else if(strcmp(atmname,"CB")==0)
+      else if(strcmp(atmname, "CB")==0)
        {
 	r_s[ir][0][0]=x;
 	r_s[ir][0][1]=y;
@@ -125,14 +125,14 @@ void write_pdb_backbone(char pdb_name[], char res_name[5][4], double r_n[5][3], 
 //  character(len=100), intent(in) :: pdb_name
 //  integer, intent(in) :: stt_res, end_res
 //  character(len=4), intent(in) :: res_name(:)
-//  real(dp_io), intent(in) :: r_n(:,:), r_a(:,:), r_c(:,:)
+//  real(dp_io), intent(in) :: r_n(:, :), r_a(:, :), r_c(:, :)
 //  integer :: i, j, k, unit = 20, res_no, ir
   int res_no, ir, k=0;
 
 //  open(unit, file = trim(pdb_name))
   if((fpdb=fopen(pdb_name, "w"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", pdb_name);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", pdb_name);
     exit(1);
    }
 	
@@ -141,29 +141,29 @@ void write_pdb_backbone(char pdb_name[], char res_name[5][4], double r_n[5][3], 
 //  do res_no = stt_res, end_res
 //     ir = res_no - stt_res + 1
 //     k = k+1
-//     write(unit,72) 'ATOM', k, 'N  ', res_name(ir), res_no, r_n(1:3,ir)
+//     write(unit, 72) 'ATOM', k, 'N  ', res_name(ir), res_no, r_n(1:3, ir)
 //     k = k+1
-//     write(unit,72) 'ATOM', k, 'CA ', res_name(ir), res_no, r_a(1:3,ir)
+//     write(unit, 72) 'ATOM', k, 'CA ', res_name(ir), res_no, r_a(1:3, ir)
 //     k = k+1
-//     write(unit,72) 'ATOM', k, 'C  ', res_name(ir), res_no, r_c(1:3,ir)
+//     write(unit, 72) 'ATOM', k, 'C  ', res_name(ir), res_no, r_c(1:3, ir)
 //  end do
 //  write(unit, "(a3)") 'END'
 //  close (unit)
-  for(res_no=stt_res;res_no<=end_res;res_no++)
+  for (res_no=stt_res;res_no<=end_res;res_no++)
    {
     ir = res_no - stt_res;
     k++;
-    fprintf(fpdb, "ATOM   %4d  N   %s A%4d    %8.3lf%8.3lf%8.3lf\n",
+    fprintf(fpdb, "ATOM   %4d  N   %s A%4d    %8.3lf%8.3lf%8.3lf\n", 
 	    k, res_name[ir], res_no, r_n[ir][0], r_n[ir][1], r_n[ir][2]);
     k++;
-    fprintf(fpdb, "ATOM   %4d  CA  %s A%4d    %8.3lf%8.3lf%8.3lf\n",
+    fprintf(fpdb, "ATOM   %4d  CA  %s A%4d    %8.3lf%8.3lf%8.3lf\n", 
 	    k, res_name[ir], res_no, r_a[ir][0], r_a[ir][1], r_a[ir][2]);
     k++;
-    fprintf(fpdb, "ATOM   %4d  C   %s A%4d    %8.3lf%8.3lf%8.3lf\n",
+    fprintf(fpdb, "ATOM   %4d  C   %s A%4d    %8.3lf%8.3lf%8.3lf\n", 
 	    k, res_name[ir], res_no, r_c[ir][0], r_c[ir][1], r_c[ir][2]);
-    fprintf(fpdb, "ATOM   %4d  O   %s A%4d    %8.3lf%8.3lf%8.3lf\n",
+    fprintf(fpdb, "ATOM   %4d  O   %s A%4d    %8.3lf%8.3lf%8.3lf\n", 
 	    k, res_name[ir], res_no, r_o[ir][0], r_o[ir][1], r_o[ir][2]);
-    fprintf(fpdb, "ATOM   %4d  CB  %s A%4d    %8.3lf%8.3lf%8.3lf\n",
+    fprintf(fpdb, "ATOM   %4d  CB  %s A%4d    %8.3lf%8.3lf%8.3lf\n", 
 	    k, res_name[ir], res_no, r_s[ir][0][0], r_s[ir][0][1], r_s[ir][0][2]);
    }
   fclose(fpdb);

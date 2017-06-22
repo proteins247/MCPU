@@ -3,9 +3,9 @@ void Update();
 
 void Update() {
   int i, j, k, temp1;
-  short M,N, temp;
+  short M, N, temp;
 
-  for(i=0; i<all_rotated_natoms; i++) {
+  for (i=0; i<all_rotated_natoms; i++) {
     N = all_rotated_atoms[i];
     temp_atom = &native[N];
     temp_prev_atom = &prev_native[N];
@@ -14,7 +14,7 @@ void Update() {
     while(N!=temp_prev_atom->matrix->atom_list[j])
       j++;
     // remove the rotated atom N from the previous matrix
-    for(k=j; k<(temp_prev_atom->matrix->natoms-1); k++)
+    for (k=j; k<(temp_prev_atom->matrix->natoms-1); k++)
       temp_prev_atom->matrix->atom_list[k] = temp_prev_atom->matrix->atom_list[k+1];
     temp_prev_atom->matrix->natoms--;
     
@@ -25,7 +25,7 @@ void Update() {
       if (j!=temp_atom->matrix->natoms) {
 	temp = temp_atom->matrix->atom_list[j];
 	temp_atom->matrix->atom_list[j] = N;
-	for(k=j+1; k< (temp_atom->matrix->natoms); k++) {
+	for (k=j+1; k< (temp_atom->matrix->natoms); k++) {
 	  temp1 = temp_atom->matrix->atom_list[k]; 
 	  temp_atom->matrix->atom_list[k] = temp; 
 	  temp = temp1;
@@ -36,12 +36,12 @@ void Update() {
 	temp_atom->matrix->atom_list[temp_atom->matrix->natoms++] = N;
 
       if(temp_atom->matrix->natoms>=MAX_CELL_ATOMS){
-        fprintf(STATUS,"Lattice Error: Update(), num. of atoms exceeds maximum num. %d of the cell", MAX_CELL_ATOMS);
-        fprintf(STATUS,"Lattice Error: atom %4s %4d %4s\n", temp_atom->atomname, temp_atom->res_num, temp_atom->res);
-        fprintf(STATUS,"Lattice Error: atom lists\n");
-        for(k=0;k<temp_atom->matrix->natoms;k++){
+        fprintf(STATUS, "Lattice Error: Update(), num. of atoms exceeds maximum num. %d of the cell", MAX_CELL_ATOMS);
+        fprintf(STATUS, "Lattice Error: atom %4s %4d %4s\n", temp_atom->atomname, temp_atom->res_num, temp_atom->res);
+        fprintf(STATUS, "Lattice Error: atom lists\n");
+        for (k=0;k<temp_atom->matrix->natoms;k++){
           M=temp_atom->matrix->atom_list[k];
-          fprintf(STATUS,"Lattice Error: %4d %4s %4d %4s\n", M, native[M].atomname, native[M].res_num, native[M].res);
+          fprintf(STATUS, "Lattice Error: %4d %4s %4d %4s\n", M, native[M].atomname, native[M].res_num, native[M].res);
         }
         exit(1);
       }
@@ -49,8 +49,8 @@ void Update() {
     else
       temp_atom->matrix->atom_list[temp_atom->matrix->natoms++] = N;
 
-    Copy(temp_atom->xyz,&temp_prev_atom->xyz);
-    CopyLatticeCoordinates(native[N],&prev_native[N]);     
+    Copy(temp_atom->xyz, &temp_prev_atom->xyz);
+    CopyLatticeCoordinates(native[N], &prev_native[N]);     
   }
 
   E_pot += dE_pot;
@@ -72,15 +72,15 @@ void Update() {
 
 //  if ((sidechain_step!=0)||(USE_ROTAMERS))
   if (sidechain_step!=0)
-    for(i=0; i<native_residue[mc.sel_res_num].ntorsions; i++) 
+    for (i=0; i<native_residue[mc.sel_res_num].ntorsions; i++) 
       native_residue[mc.sel_res_num].chi[i] += mc.delta_angle[i];
   else
-    for(i=0; i<mc.loop_size; i++) {
+    for (i=0; i<mc.loop_size; i++) {
       native_residue[mc.selected[i]].phi += mc.delta_phi_angle[i];
       native_residue[mc.selected[i]].psi += mc.delta_psi_angle[i];
     }
 
-  for(i=0; i<total_pairs; i++) {
+  for (i=0; i<total_pairs; i++) {
     M = ab[i].a;
     N = ab[i].b;
     data[M][N].contacts = data[N][M].contacts = data[M][N].delta_contacts;
@@ -92,7 +92,7 @@ void Update() {
 
   if (!mc_flags.init)
    {
-    for(i=0; i< total_hbond_pairs; i++) {
+    for (i=0; i< total_hbond_pairs; i++) {
       M = hbond_pair[i].a;
       N = hbond_pair[i].b;
       data[M][N].hbond = data[N][M].hbond = data[M][N].delta_hbond;
@@ -104,7 +104,7 @@ void Update() {
   
   if (mc_flags.init) {
     nclashes+=delta_nclashes;
-    for(i=0; i<total_pairs2; i++) {
+    for (i=0; i<total_pairs2; i++) {
       M = cd[i].a;
       N = cd[i].b;
       data[M][N].clashes=data[N][M].clashes=data[M][N].delta_clashes;
@@ -117,26 +117,26 @@ void Update() {
 
 void Restore() {
   int i;
-  short M,N;
+  short M, N;
 
   //fprintf(stdout, "Restore(): mc.sel_res_num %d, sidechain_step %1d, sidemovedone %1d\n", mc.sel_res_num, sidechain_step, sidemovedone);
 
   if ((sidechain_step!=0)&&(sidemovedone!=0))
-    for(i=0; i<native_residue[mc.sel_res_num].ntorsions; i++)
+    for (i=0; i<native_residue[mc.sel_res_num].ntorsions; i++)
       native_residue[mc.sel_res_num].tmpchi[i] -= mc.delta_angle[i];
 
-  for(i=0; i<all_rotated_natoms; i++) {
+  for (i=0; i<all_rotated_natoms; i++) {
     N = all_rotated_atoms[i];
     temp_atom = &native[N];
     temp_prev_atom = &prev_native[N];
-    Copy(temp_prev_atom->xyz,&temp_atom->xyz);
-    CopyLatticeCoordinates(prev_native[N],&native[N]);
+    Copy(temp_prev_atom->xyz, &temp_atom->xyz);
+    CopyLatticeCoordinates(prev_native[N], &native[N]);
   }
 
   if (USE_ROTAMERS)
     cur_rotamers[mc.sel_res_num] = old_rotamer;
  
-  for(i=0; i<total_pairs; i++) {
+  for (i=0; i<total_pairs; i++) {
     M = ab[i].a;
     N = ab[i].b;
     data[M][N].delta_contacts=0;
@@ -144,7 +144,7 @@ void Restore() {
   }
   
   if (mc_flags.init) {
-    for(i=0; i<total_pairs2; i++) {
+    for (i=0; i<total_pairs2; i++) {
       M = cd[i].a;
       N = cd[i].b;
       data[M][N].delta_clashes=0;
@@ -152,7 +152,7 @@ void Restore() {
   }
 
   else {
-    for(i=0; i<total_hbond_pairs; i++){ 
+    for (i=0; i<total_hbond_pairs; i++){ 
       M = hbond_pair[i].a;
       N = hbond_pair[i].b;
       data[M][N].delta_hbond=data[N][M].delta_hbond=NO_HBOND;

@@ -6,7 +6,7 @@ struct int_vector {
   long int x, y, z;
 };
 
-Float D2(struct vector,struct vector);    /* calculates the square of the distance */
+Float D2(struct vector, struct vector);    /* calculates the square of the distance */
 void Zero(struct vector *);
 void MakeVector(struct vector, struct vector, struct vector *);
 Float Dot(struct vector, struct vector);
@@ -18,11 +18,11 @@ void Add(struct vector, struct vector *);
 void Normalize(struct vector *);
 void CrossProduct(struct vector, struct vector, struct vector *);
 void bisect(struct vector, struct vector, struct vector *);
-void RotateX(Float,struct vector *);
-void RotateY(Float,struct vector *);
-void RotateZ(Float,struct vector *);
+void RotateX(Float, struct vector *);
+void RotateY(Float, struct vector *);
+void RotateZ(Float, struct vector *);
 void MakeRotationMatrix(Float, struct vector);
-void Rotate(Float[3][3],struct vector *);
+void Rotate(Float[3][3], struct vector *);
 Float Angle(struct vector, struct vector);
 
 Float D2(struct vector xyz1, struct vector xyz2) {
@@ -156,7 +156,7 @@ void RotateZ(Float angle, struct vector *A) {
   return;
 }
 
-void RotateX(Float angle,struct vector *A) {
+void RotateX(Float angle, struct vector *A) {
   
   Float y_new, z_new;
   

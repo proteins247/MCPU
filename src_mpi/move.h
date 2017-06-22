@@ -20,124 +20,111 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
 //  float hb_after_move = 0.;
 //  int j;
 //  float e;
-/*rmsd by jyang*/
+  /*rmsd by jyang*/
   struct backbone struct_f2[MAXSEQUENCE];
   struct alignment align;
 
   NFRAG = 1;
-  align.seqptr[1].x1=1;
-  align.structptr[1].x1=1;
-  align.seqptr[1].x2=nresidues;
-  align.structptr[1].x2=nresidues;
+  align.seqptr[1].x1 = 1;
+  align.structptr[1].x1 = 1;
+  align.seqptr[1].x2 = nresidues;
+  align.structptr[1].x2 = nresidues;
   backbone_accepted = 0;
 
-  do {
+  do {                          /* while (sidechain_step++ < SIDECHAIN_MOVES)
+                                 * if SIDECHAIN_MOVES is 1, the loop execs twice.
+                                 */
 
-    reject=0;
-    mc_flags.clashed=0;
-    nomove=0;
+    reject = 0;
+    mc_flags.clashed = 0;
+    nomove = 0;
     sidemovedone = 0;
     
     /* make backbone move */
-    if (sidechain_step == 0){
+    if (sidechain_step == 0) {
 
-      if ((use_global_bb_moves) && (use_global_bb_moves  > 0.001))
-       {
-	fprintf(STATUS,"USE_GLOBAL_BB_MOVES is turuned on!!!");
+      if ((use_global_bb_moves) && (use_global_bb_moves > 0.001)) {
+	fprintf(STATUS, "USE_GLOBAL_BB_MOVES is turned on!!!");
 	exit(1);
-       }
+      }
       
-      if (threefryrand()<CLUSTER_MOVE)
-       {
+      if (threefryrand() < CLUSTER_MOVE) {
         //fprintf(STATUS, "LoopBackbondMove():\n");
         LoopBackboneMove(step_size);
         use_yang = 0;
-       }
-      else
-       {
-        if (YANG_MOVE)
-         {
-  	  if (threefryrand()<YANG_MOVE)
-	   {
+      }
+      else {
+        if (YANG_MOVE) {
+  	  if (threefryrand() < YANG_MOVE) {
             //fprintf(STATUS, "integloop():\n");
 	    integloop(step_size, &n_soln);
 	    use_yang = 1;
-	   }
-	  else
-	   {
+          }
+	  else {
             //fprintf(STATUS, "LocalBackboneMove():\n");
 	    LocalBackboneMove(step_size);
 	    use_yang = 0;
-	   }
-         }
-        else
-         {
+          }
+        }
+        else {
           //fprintf(STATUS, "LocalBackboneMove():\n");
           LocalBackboneMove(step_size);
           use_yang = 0;
-         }
-       }
-     }
-    else 
-     {
-      if(total_ntorsions!=0)
-       {
+        }
+      }
+    } else {                    /* sidechain_step != 0 */
+      if (total_ntorsions != 0) {
         //fprintf(STATUS, "SidechainMove():\n");
         SidechainMove();
-       }
+      }
       use_yang = 0;
-     }
+    }
 
-    if (!mc_flags.init && mc_flags.clashed)
-     {
+    if (!mc_flags.init && mc_flags.clashed) {
       reject = 1;
-      if ((nomove==0)&&(sidechain_step == 0))
+      if ((nomove == 0) && (sidechain_step == 0))
         nrejected++;
-     }
-    else if ((use_yang == 1) && (n_soln==0))
-     {
+    }
+    else if ((use_yang == 1) && (n_soln == 0)) {
       reject = 1;
       if (sidechain_step == 0)
         nothers++;
-     }
-    else { 
+    }
+    else {
 
-      delta_nclashes=0;
+      delta_nclashes = 0;
       if (mc_flags.init)  
-	for(i=0; i<total_pairs2; i++) 
-	  delta_nclashes+=data[cd[i].a][cd[i].b].delta_clashes-data[cd[i].a][cd[i].b].clashes;
+	for (i=0; i<total_pairs2; i++) 
+	  delta_nclashes += data[cd[i].a][cd[i].b].delta_clashes-data[cd[i].a][cd[i].b].clashes;
 
-      dE=0; dE_pot = 0; dE_hbond = 0; dE_tor = 0; dE_aro = 0; dE_sct = 0;
+      dE = 0; dE_pot = 0; dE_hbond = 0; dE_tor = 0; dE_aro = 0; dE_sct = 0;
 
-      if (sidechain_step==0)
+      if (sidechain_step == 0)
 	dE_tor = torsionenergy() - prev_E_tor;
 
-      if((sidechain_step!=0)&& sidemovedone ) {
+      if ((sidechain_step != 0) && sidemovedone)
         dE_sct = sctenergy() - prev_E_sct;
-      }
 
       dE_aro = aromaticenergy() - prev_E_aro;
-      delta_contacts=0;
-      for(i=0; i < total_pairs; i++) {
+      delta_contacts = 0;
+      for (i=0; i<total_pairs; i++) {
 	N = ab[i].a; M = ab[i].b;
 	del = data[N][M].delta_contacts-data[N][M].contacts;
 	delta_contacts += del;
-	dE_pot+=((Float) del)*potential[native[N].smogtype][native[M].smogtype];
+	dE_pot += ((Float) del)*potential[native[N].smogtype][native[M].smogtype];
       }
       if (weight_hbond) {
-        if (sidechain_step==0)
+        if (sidechain_step == 0)
 	  dE_hbond = FoldHydrogenBonds() - prev_E_hbond;
       }
 
-      if ((weight_rms!=0.0)&&(sidechain_step==0))
-       {
-        for(i=0;i<nalign;++i)
-         {
-	  struct_f2[i+1].CA.x=native[native_residue[map_to_seq[i]].CA].xyz.x;
-          struct_f2[i+1].CA.y=native[native_residue[map_to_seq[i]].CA].xyz.y;
-          struct_f2[i+1].CA.z=native[native_residue[map_to_seq[i]].CA].xyz.z;
-         }
-       }
+      if ((weight_rms != 0.0) && (sidechain_step == 0)) {
+        for (i=0;i<nalign;++i) {
+	  struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
+          struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
+          struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
+        }
+      }
 //	align_drms(native, native_residue, struct_native, struct_residue, map_to_seq, map_to_struct, nalign, &bb_rms);
       dE = weight_potential*dE_pot + weight_clash*delta_nclashes + weight_hbond*dE_hbond + TOR_WEIGHT*dE_tor + ARO_WEIGHT*dE_aro + SCT_WEIGHT*dE_sct;
       
@@ -146,21 +133,17 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
 	Update();
         //fprintf(STATUS, "Updated ...\n");
         //ResetEnergies();
-        if ((nomove==0)&&(sidechain_step == 0))
-	 {
+        if ((nomove == 0) && (sidechain_step == 0)) {
 	  naccepted++;
 	  backbone_accepted = 1;
-	 }
-	else 
+        } else 
 	  n_sidechain_accepted++;
-//    fprintf(STATUS,"%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n", E, 0.2*E_pot+0.8*E_hbond, E_pot, E_hbond, dE, dE_pot, dE_hbond);
-      }
-      else
-       {
-	reject=1;
-        if ((nomove==0)&&(sidechain_step == 0))
+//    fprintf(STATUS, "%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n", E, 0.2*E_pot+0.8*E_hbond, E_pot, E_hbond, dE, dE_pot, dE_hbond);
+      } else {
+	reject = 1;
+        if ((nomove==0) && (sidechain_step == 0))
 	  nrejected++;
-       }
+      }
     }
 
     if (reject) { 
@@ -169,11 +152,11 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
       //ResetEnergies();
     }
 
-    for(i=0;i<all_rotated_natoms;i++){
-      is_rotated[all_rotated_atoms[i]]=0;
+    for (i=0; i<all_rotated_natoms; i++) {
+      is_rotated[all_rotated_atoms[i]] = 0;
     }
     
-  } while(sidechain_step++ < SIDECHAIN_MOVES);
+  } while (sidechain_step++ < SIDECHAIN_MOVES);
   
   return;
   
@@ -213,14 +196,14 @@ void LocalBackboneMove(Float step_size) {
   else if (mc.sel_res_num == nresidues-1)
     mc.is_phi = 1;
   else    mc.is_phi = (int) (threefryrand()*2);
-  //fprintf(STATUS,"mainchain move at %5d\n", mc.sel_res_num);
+  //fprintf(STATUS, "mainchain move at %5d\n", mc.sel_res_num);
 
   step_size = step_size*GaussianNum();;
 
   BackboneMove(step_size);
   UpdateLattice(rotate_natoms[mc.is_phi][mc.sel_res_num], rotate_atom[mc.is_phi][mc.sel_res_num]);
 
-  for(i=0;i<rotate_natoms[mc.is_phi][mc.sel_res_num];i++){
+  for (i=0;i<rotate_natoms[mc.is_phi][mc.sel_res_num];i++){
     is_rotated[rotate_atom[mc.is_phi][mc.sel_res_num][i]]=1;
   }
 
@@ -231,7 +214,7 @@ void LocalBackboneMove(Float step_size) {
 
 void LoopBackboneMove(Float absolute_step_size) {
 
-  int a,b,c,d, i, j;
+  int a, b, c, d, i, j;
   Float step_phi, step_psi;
   Float desire_phi, desire_psi;
   int cluster_bin;
@@ -291,7 +274,7 @@ void LoopBackboneMove(Float absolute_step_size) {
 //  cluster_bin = 1;
   desire_phi = cluster_phi[native_residue[mc.selected[i]].amino_num][cluster_bin];
   desire_psi = cluster_psi[native_residue[mc.selected[i]].amino_num][cluster_bin];
-//fprintf(STATUS,"%d\n", cluster_bin);
+//fprintf(STATUS, "%d\n", cluster_bin);
   /* rotates phi and psi */
   if(secstr[mc.selected[i]]=='H')
     use_cluster = 0.5;
@@ -303,7 +286,7 @@ void LoopBackboneMove(Float absolute_step_size) {
     use_cluster = USE_CLUSTER;
   else
    {
-    fprintf(STATUS,"ERROR! secondary structure prediction has a unknown charactrer: %c\n", secstr[mc.selected[i]]);
+    fprintf(STATUS, "ERROR! secondary structure prediction has a unknown charactrer: %c\n", secstr[mc.selected[i]]);
     exit(1);
    }
   if (mc.selected[i] > nresidues/2.0) {
@@ -317,15 +300,15 @@ void LoopBackboneMove(Float absolute_step_size) {
         else
           step_phi = GaussianNum()*CLUSTER_NOISE;
 	step_phi *= deg2rad;
-//	fprintf(STATUS,"%f\n", step_size);
+//	fprintf(STATUS, "%f\n", step_size);
 	
 	a = native_residue[mc.selected[i]-1].C;
 	b = native_residue[mc.selected[i]].N;
 	c = native_residue[mc.selected[i]].CA;
 	d = native_residue[mc.selected[i]].C;
-        DoRotation(a,b,c,d,step_phi,loop_rotate_natoms[mc.selected[i]][0],loop_rotate_atoms[mc.selected[i]][0]);
+        DoRotation(a, b, c, d, step_phi, loop_rotate_natoms[mc.selected[i]][0], loop_rotate_atoms[mc.selected[i]][0]);
 	mc.delta_phi_angle[i]=step_phi;
-        for(j=0;j<loop_rotate_natoms[mc.selected[i]][0];j++){
+        for (j=0;j<loop_rotate_natoms[mc.selected[i]][0];j++){
           is_rotated[loop_rotate_atoms[mc.selected[i]][0][j]]=1;
         }
       }
@@ -343,9 +326,9 @@ void LoopBackboneMove(Float absolute_step_size) {
 	b = native_residue[mc.selected[i]].CA;
 	c = native_residue[mc.selected[i]].C;
 	d = native_residue[mc.selected[i]+1].N;
-       DoRotation(a,b,c,d,step_psi,loop_rotate_natoms[mc.selected[i]][1],loop_rotate_atoms[mc.selected[i]][1]);
+       DoRotation(a, b, c, d, step_psi, loop_rotate_natoms[mc.selected[i]][1], loop_rotate_atoms[mc.selected[i]][1]);
 	mc.delta_psi_angle[i]=step_psi;
-        for(j=0;j<loop_rotate_natoms[mc.selected[i]][1];j++){
+        for (j=0;j<loop_rotate_natoms[mc.selected[i]][1];j++){
           is_rotated[loop_rotate_atoms[mc.selected[i]][1][j]]=2;
         }
       } 
@@ -365,9 +348,9 @@ void LoopBackboneMove(Float absolute_step_size) {
 	c = native_residue[mc.selected[i]].CA;
 	b = native_residue[mc.selected[i]].C;
 	d = native_residue[mc.selected[i]+1].N;
-	DoRotation(a,b,c,d,-step_psi,loop_rotate_natoms[mc.selected[i]][0],loop_rotate_atoms[mc.selected[i]][0]);
+	DoRotation(a, b, c, d, -step_psi, loop_rotate_natoms[mc.selected[i]][0], loop_rotate_atoms[mc.selected[i]][0]);
 	mc.delta_psi_angle[i]=-step_psi;
-        for(j=0;j<loop_rotate_natoms[mc.selected[i]][0];j++){
+        for (j=0;j<loop_rotate_natoms[mc.selected[i]][0];j++){
           is_rotated[loop_rotate_atoms[mc.selected[i]][0][j]]=1;
         }
       } 
@@ -385,16 +368,16 @@ void LoopBackboneMove(Float absolute_step_size) {
 	c = native_residue[mc.selected[i]].N;
 	b = native_residue[mc.selected[i]].CA;
 	d = native_residue[mc.selected[i]].C;
-	DoRotation(a,b,c,d,-step_phi,loop_rotate_natoms[mc.selected[i]][1],loop_rotate_atoms[mc.selected[i]][1]);
+	DoRotation(a, b, c, d, -step_phi, loop_rotate_natoms[mc.selected[i]][1], loop_rotate_atoms[mc.selected[i]][1]);
 	mc.delta_phi_angle[i]=-step_phi;
-        for(j=0;j<loop_rotate_natoms[mc.selected[i]][1];j++){
+        for (j=0;j<loop_rotate_natoms[mc.selected[i]][1];j++){
           is_rotated[loop_rotate_atoms[mc.selected[i]][1][j]]=2;
         }
       }
   }
 //  check_phipsi();
-//   fprintf(STATUS,"%3d %s %3d %3d %7.5f %7.5f %7.5f %7.5f\n",
-//       mc.selected[i], native_residue[mc.selected[i]].res, native_residue[mc.selected[i]].amino_num, cluster_bin,
+//   fprintf(STATUS, "%3d %s %3d %3d %7.5f %7.5f %7.5f %7.5f\n", 
+//       mc.selected[i], native_residue[mc.selected[i]].res, native_residue[mc.selected[i]].amino_num, cluster_bin, 
 //       desire_phi, cur_phi[mc.selected[i]-1], desire_psi, cur_psi[mc.selected[i]-1]);
 
   UpdateLattice(loop_rotate_natoms[mc.selected[i]][0], loop_rotate_atoms[mc.selected[i]][0]);
@@ -408,7 +391,7 @@ void LoopBackboneMove(Float absolute_step_size) {
  
 void BackboneMove(Float step_size) {
   short temp;
-  int a,b,c,d;   /*          d    */
+  int a, b, c, d;   /*          d    */
                  /*         /     */ 
                  /*    b - c      */
                  /*   /           */
@@ -442,7 +425,7 @@ void BackboneMove(Float step_size) {
     c = temp;
   } 
 
-  DoRotation(a,b,c,d,mc.delta_angle[0],rotate_natoms[mc.is_phi][mc.sel_res_num],rotate_atom[mc.is_phi][mc.sel_res_num]);
+  DoRotation(a, b, c, d, mc.delta_angle[0], rotate_natoms[mc.is_phi][mc.sel_res_num], rotate_atom[mc.is_phi][mc.sel_res_num]);
 
   all_rotated_natoms = rotate_natoms[mc.is_phi][mc.sel_res_num];
   all_rotated_atoms = rotate_atom[mc.is_phi][mc.sel_res_num];
@@ -452,7 +435,7 @@ void BackboneMove(Float step_size) {
 }
 
 void MakeSidechainMove() {
-  int a,b,c,d, i, j;
+  int a, b, c, d, i, j;
   int sel_no_chi;
   float p_0to1;
   float cummul_prob;
@@ -462,7 +445,7 @@ void MakeSidechainMove() {
    {
     p_0to1 = threefryrand()*100;
     cummul_prob = 0.;
-    for(i=0; i<no_chi_list[native_residue[mc.sel_res_num].amino_num]; i++)
+    for (i=0; i<no_chi_list[native_residue[mc.sel_res_num].amino_num]; i++)
      {
       cummul_prob += prob_ang[native_residue[mc.sel_res_num].amino_num][i]; 
       if (cummul_prob > p_0to1)
@@ -472,19 +455,19 @@ void MakeSidechainMove() {
    }
   else
    sel_no_chi = (int) (threefryrand()*no_chi_list[native_residue[mc.sel_res_num].amino_num]);
-  //fprintf(STATUS,"sidechain move at %5d\n", mc.sel_res_num);
+  //fprintf(STATUS, "sidechain move at %5d\n", mc.sel_res_num);
   
   old_rotamer = cur_rotamers[mc.sel_res_num];
   cur_rotamers[mc.sel_res_num] = mc.sel_rotamer;
 
-  for(i=0; i<native_residue[mc.sel_res_num].ntorsions; i++) {
+  for (i=0; i<native_residue[mc.sel_res_num].ntorsions; i++) {
 
     a = sidechain_torsion[mc.sel_res_num][i][0];
     b = sidechain_torsion[mc.sel_res_num][i][1];
     c = sidechain_torsion[mc.sel_res_num][i][2];
     d = sidechain_torsion[mc.sel_res_num][i][3];
-//    fprintf(STATUS,"%10ld %3d %s chi: %d  no_list: %2d %8.3f %8.3f %8.3f %8.3f %8.3f\n", mcstep, mc.sel_res_num, native_residue[mc.sel_res_num].res, i,
-//           sel_no_chi, rotamer_angles[mc.sel_res_num].chis[sel_no_chi][i], deviation_ang[native_residue[mc.sel_res_num].amino_num][sel_no_chi][i],
+//    fprintf(STATUS, "%10ld %3d %s chi: %d  no_list: %2d %8.3f %8.3f %8.3f %8.3f %8.3f\n", mcstep, mc.sel_res_num, native_residue[mc.sel_res_num].res, i, 
+//           sel_no_chi, rotamer_angles[mc.sel_res_num].chis[sel_no_chi][i], deviation_ang[native_residue[mc.sel_res_num].amino_num][sel_no_chi][i], 
 //	   p_0to1, cummul_prob, prob_ang[native_residue[mc.sel_res_num].amino_num][sel_no_chi]);
 
     if (USE_ROTAMERS)
@@ -495,8 +478,8 @@ void MakeSidechainMove() {
       mc.delta_angle[i] = GaussianNum()*SIDECHAIN_NOISE;
     native_residue[mc.sel_res_num].tmpchi[i] = native_residue[mc.sel_res_num].chi[i] + mc.delta_angle[i];
     
-    DoRotation(a,b,c,d,mc.delta_angle[i],rotate_sidechain_natoms[mc.sel_res_num][i],rotate_sidechain_atom[mc.sel_res_num][i]);
-    for(j=0;j<rotate_sidechain_natoms[mc.sel_res_num][i];j++){
+    DoRotation(a, b, c, d, mc.delta_angle[i], rotate_sidechain_natoms[mc.sel_res_num][i], rotate_sidechain_atom[mc.sel_res_num][i]);
+    for (j=0;j<rotate_sidechain_natoms[mc.sel_res_num][i];j++){
       is_rotated[rotate_sidechain_atom[mc.sel_res_num][i][j]]=i+1;
     }
   }
@@ -519,8 +502,8 @@ void SidechainMove() {
 
   MakeSidechainMove();
   sidemovedone = 1;
-  UpdateLattice(rotate_sidechain_natoms[mc.sel_res_num][0],rotate_sidechain_atom[mc.sel_res_num][0]);   
-  NewDeltaContacts(rotate_sidechain_natoms[mc.sel_res_num][0],rotate_sidechain_atom[mc.sel_res_num][0],sidechain_not_rotated[mc.sel_res_num][0]);
+  UpdateLattice(rotate_sidechain_natoms[mc.sel_res_num][0], rotate_sidechain_atom[mc.sel_res_num][0]);   
+  NewDeltaContacts(rotate_sidechain_natoms[mc.sel_res_num][0], rotate_sidechain_atom[mc.sel_res_num][0], sidechain_not_rotated[mc.sel_res_num][0]);
   
   return;
 }

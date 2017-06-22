@@ -54,13 +54,13 @@ void integloop(float step_size, int *n_soln)
   total_hbond_pairs = 0;
 
   res_atomno[nresidues] = natoms;
-//  fprintf(STATUS,"info:%d %d\n", nresidues, natoms);
+//  fprintf(STATUS, "info:%d %d\n", nresidues, natoms);
     
   sel_res = (int) (threefryrand()*nresidues);
 //  sel_res = 20;
   mc.is_phi = (int) (threefryrand()*2);
 //  mc.is_phi = 1;
-//fprintf(STATUS,"%f\n", deg2rad*2.);
+//fprintf(STATUS, "%f\n", deg2rad*2.);
   step_size = YANG_SCALE*2.*deg2rad*GaussianNum();
 //  step_size = threefryrand()*1.0*pi - 0.5*pi;
 //  step_size = 0.;
@@ -71,13 +71,13 @@ void integloop(float step_size, int *n_soln)
     n0 = sel_res-3;
     if (sel_res < 4)
      {
-//      fprintf(STATUS,"Too left! n0: %d\n", n0);
+//      fprintf(STATUS, "Too left! n0: %d\n", n0);
       return;
      }
     if ((native_residue[sel_res].amino_num==14) || (native_residue[sel_res-1].amino_num==14) ||
         (native_residue[sel_res-2].amino_num==14) || (native_residue[sel_res-3].amino_num==14))
      {
-//      fprintf(STATUS,"Can't rotate phi angle of proline! n0: %d\n", n0);
+//      fprintf(STATUS, "Can't rotate phi angle of proline! n0: %d\n", n0);
       return;
      }
     if ((is_template[sel_res]==1) || (is_template[sel_res-1]==1) ||
@@ -90,20 +90,20 @@ void integloop(float step_size, int *n_soln)
     n0 = sel_res+1;
     if (sel_res > nresidues-5)
      {
-//      fprintf(STATUS,"Too right! n0: %d\n", n0);
+//      fprintf(STATUS, "Too right! n0: %d\n", n0);
       return;
      }
     if ((native_residue[sel_res+1].amino_num==14) || (native_residue[sel_res+2].amino_num==14) ||
         (native_residue[sel_res+3].amino_num==14))
      {
-//      fprintf(STATUS,"Can't rotate phi angle of proline! n0: %d\n", n0);
+//      fprintf(STATUS, "Can't rotate phi angle of proline! n0: %d\n", n0);
       return;
      }
     if ((is_template[sel_res]==1) || (is_template[sel_res+1]==1) ||
         (is_template[sel_res+2]==1) || (is_template[sel_res+3]==1))
       return;
    }
-//  fprintf(STATUS,"Local move at %d\n", n0);
+//  fprintf(STATUS, "Local move at %d\n", n0);
   strcpy(res_name[0], native_residue[n0-1].res);
   strcpy(res_name[1], native_residue[n0].res);
   strcpy(res_name[2], native_residue[n0+1].res);
@@ -113,12 +113,12 @@ void integloop(float step_size, int *n_soln)
   get_orgco(rorg_n, rorg_a, rorg_c, rorg_o, rorg_s, ns, n0);
   get_coord(r_n, r_a, r_c, r_o, r_s, ns, n0);
 
-  c_bnd_len(rorg_a[1],rorg_c[1],&o_len[0]);
-  c_bnd_len(rorg_c[1],rorg_n[2],&o_len[1]);
-  c_bnd_len(rorg_n[2],rorg_a[2],&o_len[2]);
-  c_bnd_len(rorg_a[2],rorg_c[2],&o_len[3]);
-  c_bnd_len(rorg_c[2],rorg_n[3],&o_len[4]);
-  c_bnd_len(rorg_n[3],rorg_a[3],&o_len[5]);
+  c_bnd_len(rorg_a[1], rorg_c[1], &o_len[0]);
+  c_bnd_len(rorg_c[1], rorg_n[2], &o_len[1]);
+  c_bnd_len(rorg_n[2], rorg_a[2], &o_len[2]);
+  c_bnd_len(rorg_a[2], rorg_c[2], &o_len[3]);
+  c_bnd_len(rorg_c[2], rorg_n[3], &o_len[4]);
+  c_bnd_len(rorg_n[3], rorg_a[3], &o_len[5]);
   c_bnd_ang(rorg_n[1], rorg_a[1], rorg_c[1], &o_ang[0]);
   c_bnd_ang(rorg_a[1], rorg_c[1], rorg_n[2], &o_ang[1]);
   c_bnd_ang(rorg_c[1], rorg_n[2], rorg_a[2], &o_ang[2]);
@@ -127,12 +127,12 @@ void integloop(float step_size, int *n_soln)
   c_bnd_ang(rorg_c[2], rorg_n[3], rorg_a[3], &o_ang[5]);
   c_bnd_ang(rorg_n[3], rorg_a[3], rorg_c[3], &o_ang[6]);
   
-  c_bnd_len(r_a[1],r_c[1],&b_len[0]);
-  c_bnd_len(r_c[1],r_n[2],&b_len[1]);
-  c_bnd_len(r_n[2],r_a[2],&b_len[2]);
-  c_bnd_len(r_a[2],r_c[2],&b_len[3]);
-  c_bnd_len(r_c[2],r_n[3],&b_len[4]);
-  c_bnd_len(r_n[3],r_a[3],&b_len[5]);
+  c_bnd_len(r_a[1], r_c[1], &b_len[0]);
+  c_bnd_len(r_c[1], r_n[2], &b_len[1]);
+  c_bnd_len(r_n[2], r_a[2], &b_len[2]);
+  c_bnd_len(r_a[2], r_c[2], &b_len[3]);
+  c_bnd_len(r_c[2], r_n[3], &b_len[4]);
+  c_bnd_len(r_n[3], r_a[3], &b_len[5]);
   c_bnd_ang(r_n[1], r_a[1], r_c[1], &b_ang[0]);
   c_bnd_ang(r_a[1], r_c[1], r_n[2], &b_ang[1]);
   c_bnd_ang(r_c[1], r_n[2], r_a[2], &b_ang[2]);
@@ -142,12 +142,12 @@ void integloop(float step_size, int *n_soln)
   c_bnd_ang(r_n[3], r_a[3], r_c[3], &b_ang[6]);
   
   yangloop(r_n, r_a, r_c, r_o, r_s, ns, b_len, b_ang, n0, step_size, res_name, n_soln);
-  c_bnd_len(r_a[1],r_c[1],&t_len[0]);
-  c_bnd_len(r_c[1],r_n[2],&t_len[1]);
-  c_bnd_len(r_n[2],r_a[2],&t_len[2]);
-  c_bnd_len(r_a[2],r_c[2],&t_len[3]);
-  c_bnd_len(r_c[2],r_n[3],&t_len[4]);
-  c_bnd_len(r_n[3],r_a[3],&t_len[5]);
+  c_bnd_len(r_a[1], r_c[1], &t_len[0]);
+  c_bnd_len(r_c[1], r_n[2], &t_len[1]);
+  c_bnd_len(r_n[2], r_a[2], &t_len[2]);
+  c_bnd_len(r_a[2], r_c[2], &t_len[3]);
+  c_bnd_len(r_c[2], r_n[3], &t_len[4]);
+  c_bnd_len(r_n[3], r_a[3], &t_len[5]);
   c_bnd_ang(r_n[1], r_a[1], r_c[1], &t_ang[0]);
   c_bnd_ang(r_a[1], r_c[1], r_n[2], &t_ang[1]);
   c_bnd_ang(r_c[1], r_n[2], r_a[2], &t_ang[2]);
@@ -159,71 +159,71 @@ void integloop(float step_size, int *n_soln)
    {
     if(fabs(t_len[0]-o_len[0])>small_value)
      {
-//      fprintf(STATUS,"distance 0: %6.3lf %6.3lf\n", t_len[0], o_len[0]);
+//      fprintf(STATUS, "distance 0: %6.3lf %6.3lf\n", t_len[0], o_len[0]);
       return;
      }
     if(fabs(t_len[1]-o_len[1])>small_value)
      {
-//      fprintf(STATUS,"distance 1: %6.3lf %6.3lf\n", t_len[1], o_len[1]);
+//      fprintf(STATUS, "distance 1: %6.3lf %6.3lf\n", t_len[1], o_len[1]);
       return;
      }
     if(fabs(t_len[2]-o_len[2])>small_value)
      {
-//      fprintf(STATUS,"distance 2: %6.3lf %6.3lf\n", t_len[2], o_len[2]);
+//      fprintf(STATUS, "distance 2: %6.3lf %6.3lf\n", t_len[2], o_len[2]);
       return;
      }
     if(fabs(t_len[3]-o_len[3])>small_value)
      {
-//      fprintf(STATUS,"distance 3: %6.3lf %6.3lf\n", t_len[3], o_len[3]);
+//      fprintf(STATUS, "distance 3: %6.3lf %6.3lf\n", t_len[3], o_len[3]);
       return;
      }
     if(fabs(t_len[4]-o_len[4])>small_value)
      {
-//      fprintf(STATUS,"distance 4: %6.3lf %6.3lf\n", t_len[4], o_len[4]);
+//      fprintf(STATUS, "distance 4: %6.3lf %6.3lf\n", t_len[4], o_len[4]);
       return;
      }
     if(fabs(t_len[5]-o_len[5])>small_value)
      {
-//      fprintf(STATUS,"distance 5: %6.3lf %6.3lf\n", t_len[5], o_len[5]);
+//      fprintf(STATUS, "distance 5: %6.3lf %6.3lf\n", t_len[5], o_len[5]);
       return;
      }
 
     if(fabs(t_ang[0]-o_ang[0])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 0:  %6.3lf %6.3lf\n", t_ang[0]*rad2deg, o_ang[0]*rad2deg);
+//      fprintf(STATUS, "angle 0:  %6.3lf %6.3lf\n", t_ang[0]*rad2deg, o_ang[0]*rad2deg);
       return;
      }
     if(fabs(t_ang[1]-o_ang[1])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 1:  %6.3lf %6.3lf\n", t_ang[1]*rad2deg, o_ang[1]*rad2deg);
+//      fprintf(STATUS, "angle 1:  %6.3lf %6.3lf\n", t_ang[1]*rad2deg, o_ang[1]*rad2deg);
       return;
      }
     if(fabs(t_ang[2]-o_ang[2])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 2:  %6.3lf %6.3lf\n", t_ang[2]*rad2deg, o_ang[2]*rad2deg);
+//      fprintf(STATUS, "angle 2:  %6.3lf %6.3lf\n", t_ang[2]*rad2deg, o_ang[2]*rad2deg);
       return;
      }
     if(fabs(t_ang[3]-o_ang[3])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 3:  %6.3lf %6.3lf\n", t_ang[3]*rad2deg, o_ang[3]*rad2deg);
+//      fprintf(STATUS, "angle 3:  %6.3lf %6.3lf\n", t_ang[3]*rad2deg, o_ang[3]*rad2deg);
       return;
      }
     if(fabs(t_ang[4]-o_ang[4])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 4:  %6.3lf %6.3lf\n", t_ang[4]*rad2deg, o_ang[4]*rad2deg);
+//      fprintf(STATUS, "angle 4:  %6.3lf %6.3lf\n", t_ang[4]*rad2deg, o_ang[4]*rad2deg);
       return;
      }
     if(fabs(t_ang[5]-o_ang[5])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 5:  %6.3lf %6.3lf\n", t_ang[5]*rad2deg, o_ang[5]*rad2deg);
+//      fprintf(STATUS, "angle 5:  %6.3lf %6.3lf\n", t_ang[5]*rad2deg, o_ang[5]*rad2deg);
       return;
      }
     if(fabs(t_ang[6]-o_ang[6])>small_value*deg2rad*100.)
      {
-//      fprintf(STATUS,"angle 6:  %6.3lf %6.3lf\n", t_ang[6]*rad2deg, o_ang[6]*rad2deg);
+//      fprintf(STATUS, "angle 6:  %6.3lf %6.3lf\n", t_ang[6]*rad2deg, o_ang[6]*rad2deg);
       return;
      }
-//    fprintf(STATUS,"passed\n");
+//    fprintf(STATUS, "passed\n");
    }
   
   if(*n_soln > 0)
@@ -273,15 +273,15 @@ void integloop(float step_size, int *n_soln)
   temp2[2] = (double)native[res_atomno[s2]+4].xyz.z;
   c_bnd_len(temp1, temp2, &len_ns);*/
 //  if (step%10000 == 0)
-//    fprintf(STATUS,"step: %9d res. no: %3d res. name: %s %9.3f\n", step, s2, native_residue[s2].res, ang_nac*rad2deg);
+//    fprintf(STATUS, "step: %9d res. no: %3d res. name: %s %9.3f\n", step, s2, native_residue[s2].res, ang_nac*rad2deg);
 
 //  if (step%10000 == 0)
-//    fprintf(STATUS,"step:%8d  success:%8d  n0:%4d is_phi: %d  driver ang.:%9.5f  n_soln: %d  ang_nac:%9.5f  ang_side:%9.5f  len_on:%9.5f  len_ns:%9.5f\n", step, success, n0, mc.is_phi, step_size*rad2deg, *n_soln, ang_nac*rad2deg, ang_side*rad2deg, len_on, len_ns);
+//    fprintf(STATUS, "step:%8d  success:%8d  n0:%4d is_phi: %d  driver ang.:%9.5f  n_soln: %d  ang_nac:%9.5f  ang_side:%9.5f  len_on:%9.5f  len_ns:%9.5f\n", step, success, n0, mc.is_phi, step_size*rad2deg, *n_soln, ang_nac*rad2deg, ang_side*rad2deg, len_on, len_ns);
 
   if(write_out_pdb)
    {
     sprintf(out_pdb, "data/135l_loop_min.pdb");
-    fprintf(STATUS,"\nRecording the solution at min. rmsd in %s\n", out_pdb);
+    fprintf(STATUS, "\nRecording the solution at min. rmsd in %s\n", out_pdb);
     write_pdb_backbone(out_pdb, res_name, r_n, r_a, r_c, r_o, r_s, n0, n0+4);
    }
 
@@ -295,11 +295,11 @@ void get_orgco(double rorg_n[5][3], double rorg_a[5][3], double rorg_c[5][3], do
   int i;
 //--------------------------------------------------------------------------------------------------------
  
-  for(i=0;i<5;i++)
+  for (i=0;i<5;i++)
     ns[i] = 0;
   
-  for(cur_res=0; cur_res<5; cur_res++)
-    for(cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
+  for (cur_res=0; cur_res<5; cur_res++)
+    for (cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
       if(native[cur_atom].res_num == n0-1+cur_res)
         get_orgat(rorg_n, rorg_a, rorg_c, rorg_o, rorg_s, ns, cur_res, cur_atom);
    
@@ -309,31 +309,31 @@ void get_orgco(double rorg_n[5][3], double rorg_a[5][3], double rorg_c[5][3], do
 //========================================================================================================
 void get_orgat(double rorg_n[5][3], double rorg_a[5][3], double rorg_c[5][3], double rorg_o[5][3], double rorg_s[5][MSAR][3], int ns[5], int r, int a)
  {
-  if(strcmp(native[a].atomname,"N")==0)
+  if(strcmp(native[a].atomname, "N")==0)
    {
     rorg_n[r][0] = orig_native[a].xyz.x;
     rorg_n[r][1] = orig_native[a].xyz.y;
     rorg_n[r][2] = orig_native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"CA")==0)
+  else if(strcmp(native[a].atomname, "CA")==0)
    {
     rorg_a[r][0] = orig_native[a].xyz.x;
     rorg_a[r][1] = orig_native[a].xyz.y;
     rorg_a[r][2] = orig_native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"C")==0)
+  else if(strcmp(native[a].atomname, "C")==0)
    {
     rorg_c[r][0] = orig_native[a].xyz.x;
     rorg_c[r][1] = orig_native[a].xyz.y;
     rorg_c[r][2] = orig_native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     rorg_o[r][0] = orig_native[a].xyz.x;
     rorg_o[r][1] = orig_native[a].xyz.y;
     rorg_o[r][2] = orig_native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     rorg_o[r][0] = orig_native[a].xyz.x;
     rorg_o[r][1] = orig_native[a].xyz.y;
@@ -355,11 +355,11 @@ void get_coord(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[
   int i;
 //--------------------------------------------------------------------------------------------------------
  
-  for(i=0;i<5;i++)
+  for (i=0;i<5;i++)
     ns[i] = 0;
   
-  for(cur_res=0; cur_res<5; cur_res++)
-    for(cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
+  for (cur_res=0; cur_res<5; cur_res++)
+    for (cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
       if(native[cur_atom].res_num == n0-1+cur_res)
         get_atom(r_n, r_a, r_c, r_o, r_s, ns, cur_res, cur_atom);
    
@@ -369,31 +369,31 @@ void get_coord(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[
 //========================================================================================================
 void get_atom(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5][3], double r_s[5][MSAR][3], int ns[5], int r, int a)
  {
-  if(strcmp(native[a].atomname,"N")==0)
+  if(strcmp(native[a].atomname, "N")==0)
    {
     r_n[r][0] = native[a].xyz.x;
     r_n[r][1] = native[a].xyz.y;
     r_n[r][2] = native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"CA")==0)
+  else if(strcmp(native[a].atomname, "CA")==0)
    {
     r_a[r][0] = native[a].xyz.x;
     r_a[r][1] = native[a].xyz.y;
     r_a[r][2] = native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"C")==0)
+  else if(strcmp(native[a].atomname, "C")==0)
    {
     r_c[r][0] = native[a].xyz.x;
     r_c[r][1] = native[a].xyz.y;
     r_c[r][2] = native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     r_o[r][0] = native[a].xyz.x;
     r_o[r][1] = native[a].xyz.y;
     r_o[r][2] = native[a].xyz.z;
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     r_o[r][0] = native[a].xyz.x;
     r_o[r][1] = native[a].xyz.y;
@@ -415,11 +415,11 @@ void put_coord(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[
   int i;
 //--------------------------------------------------------------------------------------------------------
  
-  for(i=0;i<5;i++)
+  for (i=0;i<5;i++)
     ns[i] = 0;
   
-  for(cur_res=0; cur_res<5; cur_res++)
-    for(cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
+  for (cur_res=0; cur_res<5; cur_res++)
+    for (cur_atom=res_atomno[n0-1]; cur_atom<res_atomno[n0+4]; cur_atom++)
       if(native[cur_atom].res_num == n0-1+cur_res)
         put_atom(r_n, r_a, r_c, r_o, r_s, ns, cur_res, cur_atom);
    
@@ -429,31 +429,31 @@ void put_coord(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[
 //========================================================================================================
 void put_atom(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5][3], double r_s[5][MSAR][3], int ns[5], int r, int a)
  {
-  if(strcmp(native[a].atomname,"N")==0)
+  if(strcmp(native[a].atomname, "N")==0)
    {
     native[a].xyz.x = r_n[r][0];
     native[a].xyz.y = r_n[r][1];
     native[a].xyz.z = r_n[r][2];
    }
-  else if(strcmp(native[a].atomname,"CA")==0)
+  else if(strcmp(native[a].atomname, "CA")==0)
    {
     native[a].xyz.x = r_a[r][0];
     native[a].xyz.y = r_a[r][1];
     native[a].xyz.z = r_a[r][2];
    }
-  else if(strcmp(native[a].atomname,"C")==0)
+  else if(strcmp(native[a].atomname, "C")==0)
    {
     native[a].xyz.x = r_c[r][0];
     native[a].xyz.y = r_c[r][1];
     native[a].xyz.z = r_c[r][2];
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     native[a].xyz.x = r_o[r][0];
     native[a].xyz.y = r_o[r][1];
     native[a].xyz.z = r_o[r][2];
    }
-  else if(strcmp(native[a].atomname,"O")==0)
+  else if(strcmp(native[a].atomname, "O")==0)
    {
     native[a].xyz.x = r_o[r][0];
     native[a].xyz.y = r_o[r][1];
@@ -474,7 +474,7 @@ void yang_rotate(int n0, int is_phi)
   int i, cur_atom;
   int another = 0;
 
-  for(i=0;i<natoms;i++)
+  for (i=0;i<natoms;i++)
     yang_not_rotated[i] = 1;
 
   is_rotated[native_residue[n0].C]=1;
@@ -521,7 +521,7 @@ void yang_rotate(int n0, int is_phi)
     yang_rotated_atoms[another++]=native_residue[n0].CA;
   }
 
-  for(cur_atom=res_atomno[n0];cur_atom<res_atomno[n0+3];cur_atom++){
+  for (cur_atom=res_atomno[n0];cur_atom<res_atomno[n0+3];cur_atom++){
     if(native[cur_atom].is_sidechain){
       is_rotated[cur_atom]=2*(native[cur_atom].res_num-n0)+1;
       yang_not_rotated[cur_atom]=0;
@@ -530,7 +530,7 @@ void yang_rotate(int n0, int is_phi)
   }
 
   yang_rotated_natoms = another;
-//  fprintf(STATUS,"yang: %5d\n", yang_rotated_natoms);
+//  fprintf(STATUS, "yang: %5d\n", yang_rotated_natoms);
     
   return;
  }
@@ -564,12 +564,12 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 //!-----------------------------------------------------------------------
   *n_soln = 0;
 /*  
-  c_bnd_len(r_c[1],r_o[1],&olen_i[0]);
-  c_bnd_len(r_c[2],r_o[2],&olen_i[1]);
-  c_bnd_len(r_c[3],r_o[3],&olen_i[2]);
-  c_bnd_len(r_a[1],r_s[1][0],&slen_i[0]);
-  c_bnd_len(r_a[2],r_s[2][0],&slen_i[1]);
-  c_bnd_len(r_a[3],r_s[3][0],&slen_i[2]);
+  c_bnd_len(r_c[1], r_o[1], &olen_i[0]);
+  c_bnd_len(r_c[2], r_o[2], &olen_i[1]);
+  c_bnd_len(r_c[3], r_o[3], &olen_i[2]);
+  c_bnd_len(r_a[1], r_s[1][0], &slen_i[0]);
+  c_bnd_len(r_a[2], r_s[2][0], &slen_i[1]);
+  c_bnd_len(r_a[3], r_s[3][0], &slen_i[2]);
 */
   t_ang[0] = pi;
   t_ang[1] = pi;
@@ -579,8 +579,8 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
   soln_no_before = n_soln_before;
   if(soln_no_before==0)
     soln_no_before=1;
-  for(i=0;i<3;i++)
-    for(k=0;k<3;k++)
+  for (i=0;i<3;i++)
+    for (k=0;k<3;k++)
      {
       r_n_before[i][k] = r_n[i+1][k];
       r_ca_before[i][k] = r_a[i+1][k];
@@ -589,8 +589,8 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
   loop_Jacobian(r_n_before, r_ca_before, r_c_before, &before_jacobi);
   jacobi_before = before_jacobi;
 
-  for(i=0;i<3;i++)
-    for(j=0;j<3;j++)
+  for (i=0;i<3;i++)
+    for (j=0;j<3;j++)
      {
       r0drms_n[i][j]=r_n[i+1][j];
       r0drms_a[i][j]=r_a[i+1][j];
@@ -602,7 +602,7 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
    {
     driver_rot(r_c[3], r1_c[3], r_a[4], r_n[4], dih_ch);
     driver_rot(r_a[3], r1_a[3], r_a[4], r_n[4], dih_ch);
-    for(i=0;i<3;i++)
+    for (i=0;i<3;i++)
      {
       r_c[3][i] = r1_c[3][i];
       r_a[3][i] = r1_a[3][i];
@@ -613,7 +613,7 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
     driver_rot(r_o[0], r1_o[0], r_a[0], r_c[0], dih_ch);
     driver_rot(r_n[1], r1_n[1], r_a[0], r_c[0], dih_ch);
     driver_rot(r_a[1], r1_a[1], r_a[0], r_c[0], dih_ch);
-    for(i=0;i<3;i++)
+    for (i=0;i<3;i++)
      {
       r_o[0][i] = r1_o[0][i];
       r_n[1][i] = r1_n[1][i];
@@ -621,14 +621,14 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
      }
    }
 
-  for(i=0;i<3;i++)
-    for(j=0;j<3;j++)
+  for (i=0;i<3;i++)
+    for (j=0;j<3;j++)
      {
       r0_n[i][j]=r_n[i+1][j];
       r0_a[i][j]=r_a[i+1][j];
       r0_c[i][j]=r_c[i+1][j];
       r0_o[i][j]=r_o[i+1][j];
-      for(z=0;z<ns[i+1];z++)
+      for (z=0;z<ns[i+1];z++)
         r0_s[i][z][j]=r_s[i+1][z][j];
      }
 
@@ -636,10 +636,10 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 
      if (calc_rmsd)
       {
-       for(k=0;k<*n_soln;k++)
+       for (k=0;k<*n_soln;k++)
         {
-         for(i=0;i<3;i++)
-	   for(j=0;j<3;j++)
+         for (i=0;i<3;i++)
+	   for (j=0;j<3;j++)
 	    {
 	     r_n[i+1][j] = r_soln_n[k][i][j];
 	     r_a[i+1][j] = r_soln_a[k][i][j];
@@ -647,17 +647,17 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 	    } 
 	   sum = 0.0e0;
 	   
-         for(i=0;i<3;i++)
+         for (i=0;i<3;i++)
 	 {
-	   for(j=0;j<3;j++)
+	   for (j=0;j<3;j++)
 	     dr[j] = r_soln_n[k][i][j] - r0drms_n[i][j];
-	   sum += dot_product(dr,dr);
-	   for(j=0;j<3;j++)
+	   sum += dot_product(dr, dr);
+	   for (j=0;j<3;j++)
 	     dr[j] = r_soln_a[k][i][j] - r0drms_a[i][j];
-	   sum += dot_product(dr,dr);
-	   for(j=0;j<3;j++)
+	   sum += dot_product(dr, dr);
+	   for (j=0;j<3;j++)
 	     dr[j] = r_soln_c[k][i][j] - r0drms_c[i][j];
-	   sum += dot_product(dr,dr);
+	   sum += dot_product(dr, dr);
 	  }
          rmsd = sqrt(sum/9.0e0);
 
@@ -667,13 +667,13 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 	   index = k;
 	  }
         }
-//       fprintf(STATUS,"\nsoln no.: %d   min. rmsd:%7.3f\n", index+1, min_value);
+//       fprintf(STATUS, "\nsoln no.: %d   min. rmsd:%7.3f\n", index+1, min_value);
        if(*n_soln>0)
         {
          index = (int) (threefryrand()*(*n_soln));
          if(index>=(*n_soln))
           {
-           fprintf(STATUS,"ERROR!!!: index %d is greater than equal to no. of solutions %d.\n", index, *n_soln);
+           fprintf(STATUS, "ERROR!!!: index %d is greater than equal to no. of solutions %d.\n", index, *n_soln);
            exit(1);
           }
         }
@@ -687,34 +687,34 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 // This is the case where driver angle is res. 4. (0~4)
 	  {
 // rotation with n0-a0
-           for(z=0;z<ns[1];z++)
+           for (z=0;z<ns[1];z++)
              get_rot(r0_s[0][z], r_soln_s[0][z], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
            get_rot(r0_o[0], rot1_o[0], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
            get_rot(r0_n[1], rot1_n[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
            get_rot(r0_a[1], rot1_a[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
              get_rot(r0_s[1][z], rot1_s[1][z], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
            get_rot(r0_c[1], rot1_c[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], r0_c[0], r_soln_c[index][0]);
 
 // rotation with a0-c0	 
 	   get_rot(rot1_o[0], r_soln_o[index][0], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot1_n[1], r_soln_n[index][1]);
 	   get_rot(rot1_a[1], rot2_a[1], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot1_n[1], r_soln_n[index][1]);
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	   get_rot(rot1_s[1][z], rot2_s[1][z], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot1_n[1], r_soln_n[index][1]);
 	   get_rot(rot1_c[1], rot2_c[1], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot1_n[1], r_soln_n[index][1]);
 
 // rotation with c0-n1
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	     get_rot(rot2_s[1][z], rot3_s[1][z], r_soln_a[index][0], r_soln_c[index][0], r_soln_n[index][1], rot2_a[1], r_soln_a[index][1]);
 	   get_rot(rot2_c[1], rot3_c[1], r_soln_a[index][0], r_soln_c[index][0], r_soln_n[index][1], rot2_a[1], r_soln_a[index][1]);
 
 // rotation with n1-a1
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	     get_rot(rot3_s[1][z], r_soln_s[1][z], r_soln_c[index][0], r_soln_n[index][1], r_soln_a[index][1], rot3_c[1], r_soln_c[index][1]);
 	 
 // rotation with a[+]-n[+]
            driver_rot(r0_o[2], r_soln_o[index][2], r_a[4], r_n[4], dih_ch);
-           for(z=0;z<ns[3];z++)
+           for (z=0;z<ns[3];z++)
              driver_rot(r0_s[2][z], rot1_s[2][z], r_a[4], r_n[4], dih_ch);
            driver_rot(r0_n[2], rot1_n[2], r_a[4], r_n[4], dih_ch);
            driver_rot(r0_c[1], rot1_c[1], r_a[4], r_n[4], dih_ch);
@@ -722,7 +722,7 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
            driver_rot(r0_a[1], rot1_a[1], r_a[4], r_n[4], dih_ch);
 
 // rotation with c2-a2	 
-           for(z=0;z<ns[3];z++)
+           for (z=0;z<ns[3];z++)
              get_rot(rot1_s[2][z], r_soln_s[2][z], r_n[4], r_soln_c[index][2], r_soln_a[index][2], rot1_n[2], r_soln_n[index][2]);
            get_rot(rot1_c[1], rot2_c[1], r_n[4], r_soln_c[index][2], r_soln_a[index][2], rot1_n[2], r_soln_n[index][2]);
            get_rot(rot1_o[1], rot2_o[1], r_n[4], r_soln_c[index][2], r_soln_a[index][2], rot1_n[2], r_soln_n[index][2]);
@@ -739,47 +739,47 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 // This is the case where driver angle is res. 0. (0~4)
 	  {
 // rotation with n[-]-a[-]
-           for(z=0;z<ns[1];z++)
+           for (z=0;z<ns[1];z++)
              driver_rot(r0_s[0][z], rot1_s[0][z], r_a[0], r_c[0], dih_ch);
            driver_rot(r0_c[0], rot1_c[0], r_a[0], r_c[0], dih_ch);
            driver_rot(r0_o[0], rot1_o[0], r_a[0], r_c[0], dih_ch);
            driver_rot(r0_n[1], rot1_n[1], r_a[0], r_c[0], dih_ch);
            driver_rot(r0_a[1], rot1_a[1], r_a[0], r_c[0], dih_ch);
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
              driver_rot(r0_s[1][z], rot1_s[1][z], r_a[0], r_c[0], dih_ch);
            driver_rot(r0_c[1], rot1_c[1], r_a[0], r_c[0], dih_ch);
 
 // rotation with n0-a0
-           for(z=0;z<ns[1];z++)
+           for (z=0;z<ns[1];z++)
              get_rot(rot1_s[0][z], r_soln_s[0][z], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
            get_rot(rot1_o[0], rot2_o[0], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
            get_rot(rot1_n[1], rot2_n[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
            get_rot(rot1_a[1], rot2_a[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
              get_rot(rot1_s[1][z], rot2_s[1][z], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
            get_rot(rot1_c[1], rot2_c[1], r_c[0], r_soln_n[index][0], r_soln_a[index][0], rot1_c[0], r_soln_c[index][0]);
 
 // rotation with a0-c0	 
 	   get_rot(rot2_o[0], r_soln_o[index][0], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot2_n[1], r_soln_n[index][1]);
 	   get_rot(rot2_a[1], rot3_a[1], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot2_n[1], r_soln_n[index][1]);
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	     get_rot(rot2_s[1][z], rot3_s[1][z], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot2_n[1], r_soln_n[index][1]);
 	   get_rot(rot2_c[1], rot3_c[1], r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], rot2_n[1], r_soln_n[index][1]);
 
 // rotation with c0-n1
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	     get_rot(rot3_s[1][z], rot4_s[1][z], r_soln_a[index][0], r_soln_c[index][0], r_soln_n[index][1], rot3_a[1], r_soln_a[index][1]);
 	   get_rot(rot3_c[1], rot4_c[1], r_soln_a[index][0], r_soln_c[index][0], r_soln_n[index][1], rot3_a[1], r_soln_a[index][1]);
 
 // rotation with n1-a1
-           for(z=0;z<ns[2];z++)
+           for (z=0;z<ns[2];z++)
 	     get_rot(rot4_s[1][z], r_soln_s[1][z], r_soln_c[index][0], r_soln_n[index][1], r_soln_a[index][1], rot4_c[1], r_soln_c[index][1]);
 	 
-           for(i=0;i<3;i++)
+           for (i=0;i<3;i++)
              r_soln_o[index][2][i] = r0_o[2][i];
 
 // rotation with c2-a2	 
-           for(z=0;z<ns[3];z++)
+           for (z=0;z<ns[3];z++)
              get_rot(r0_s[2][z], r_soln_s[2][z], r_n[4], r_soln_c[index][2], r_soln_a[index][2], r0_n[2], r_soln_n[index][2]);
            get_rot(r0_c[1], rot1_c[1], r_n[4], r_soln_c[index][2], r_soln_a[index][2], r0_n[2], r_soln_n[index][2]);
            get_rot(r0_o[1], rot1_o[1], r_n[4], r_soln_c[index][2], r_soln_a[index][2], r0_n[2], r_soln_n[index][2]);
@@ -793,21 +793,21 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
 	   get_rot(rot2_o[1], r_soln_o[index][1], r_soln_a[index][2], r_soln_n[index][2], r_soln_c[index][1], rot2_a[1], r_soln_a[index][1]);
 	  }
 
-/*	 fprintf(STATUS,"\n");
-         c_bnd_len(r_soln_a[index][0],r_soln_c[index][0],&len_f[0]);
-         c_bnd_len(r_soln_c[index][0],r_soln_n[index][1],&len_f[1]);
-         c_bnd_len(r_soln_n[index][1],r_soln_a[index][1],&len_f[2]);
-         c_bnd_len(r_soln_a[index][1],r_soln_c[index][1],&len_f[3]);
-         c_bnd_len(r_soln_c[index][1],r_soln_n[index][2],&len_f[4]);
-         c_bnd_len(r_soln_n[index][2],r_soln_a[index][2],&len_f[5]);
-         fprintf(STATUS,"len0: %9.5f%9.5f\n", b_len[0], len_f[0]);
-         fprintf(STATUS,"len1: %9.5f%9.5f\n", b_len[1], len_f[1]);
-         fprintf(STATUS,"len2: %9.5f%9.5f\n", b_len[2], len_f[2]);
-         fprintf(STATUS,"len3: %9.5f%9.5f\n", b_len[3], len_f[3]);
-         fprintf(STATUS,"len4: %9.5f%9.5f\n", b_len[4], len_f[4]);
-         fprintf(STATUS,"len5: %9.5f%9.5f\n", b_len[5], len_f[5]);
+/*	 fprintf(STATUS, "\n");
+         c_bnd_len(r_soln_a[index][0], r_soln_c[index][0], &len_f[0]);
+         c_bnd_len(r_soln_c[index][0], r_soln_n[index][1], &len_f[1]);
+         c_bnd_len(r_soln_n[index][1], r_soln_a[index][1], &len_f[2]);
+         c_bnd_len(r_soln_a[index][1], r_soln_c[index][1], &len_f[3]);
+         c_bnd_len(r_soln_c[index][1], r_soln_n[index][2], &len_f[4]);
+         c_bnd_len(r_soln_n[index][2], r_soln_a[index][2], &len_f[5]);
+         fprintf(STATUS, "len0: %9.5f%9.5f\n", b_len[0], len_f[0]);
+         fprintf(STATUS, "len1: %9.5f%9.5f\n", b_len[1], len_f[1]);
+         fprintf(STATUS, "len2: %9.5f%9.5f\n", b_len[2], len_f[2]);
+         fprintf(STATUS, "len3: %9.5f%9.5f\n", b_len[3], len_f[3]);
+         fprintf(STATUS, "len4: %9.5f%9.5f\n", b_len[4], len_f[4]);
+         fprintf(STATUS, "len5: %9.5f%9.5f\n", b_len[5], len_f[5]);
   
-	 fprintf(STATUS,"\n");
+	 fprintf(STATUS, "\n");
          c_bnd_ang(r_soln_n[index][0], r_soln_a[index][0], r_soln_c[index][0], &ang_f[0]);
          c_bnd_ang(r_soln_a[index][0], r_soln_c[index][0], r_soln_n[index][1], &ang_f[1]);
          c_bnd_ang(r_soln_c[index][0], r_soln_n[index][1], r_soln_a[index][1], &ang_f[2]);
@@ -815,97 +815,97 @@ void yangloop(double r_n[5][3], double r_a[5][3], double r_c[5][3], double r_o[5
          c_bnd_ang(r_soln_a[index][1], r_soln_c[index][1], r_soln_n[index][2], &ang_f[4]);
          c_bnd_ang(r_soln_c[index][1], r_soln_n[index][2], r_soln_a[index][2], &ang_f[5]);
          c_bnd_ang(r_soln_n[index][2], r_soln_a[index][2], r_soln_c[index][2], &ang_f[6]);
-         fprintf(STATUS,"ang0: %9.3f%9.3f\n", b_ang[0]*rad2deg, ang_f[0]*rad2deg);
-         fprintf(STATUS,"ang1: %9.3f%9.3f\n", b_ang[1]*rad2deg, ang_f[1]*rad2deg);
-         fprintf(STATUS,"ang2: %9.3f%9.3f\n", b_ang[2]*rad2deg, ang_f[2]*rad2deg);
-         fprintf(STATUS,"ang3: %9.3f%9.3f\n", b_ang[3]*rad2deg, ang_f[3]*rad2deg);
-         fprintf(STATUS,"ang4: %9.3f%9.3f\n", b_ang[4]*rad2deg, ang_f[4]*rad2deg);
-         fprintf(STATUS,"ang5: %9.3f%9.3f\n", b_ang[5]*rad2deg, ang_f[5]*rad2deg);
-         fprintf(STATUS,"ang6: %9.3f%9.3f\n", b_ang[6]*rad2deg, ang_f[6]*rad2deg);
+         fprintf(STATUS, "ang0: %9.3f%9.3f\n", b_ang[0]*rad2deg, ang_f[0]*rad2deg);
+         fprintf(STATUS, "ang1: %9.3f%9.3f\n", b_ang[1]*rad2deg, ang_f[1]*rad2deg);
+         fprintf(STATUS, "ang2: %9.3f%9.3f\n", b_ang[2]*rad2deg, ang_f[2]*rad2deg);
+         fprintf(STATUS, "ang3: %9.3f%9.3f\n", b_ang[3]*rad2deg, ang_f[3]*rad2deg);
+         fprintf(STATUS, "ang4: %9.3f%9.3f\n", b_ang[4]*rad2deg, ang_f[4]*rad2deg);
+         fprintf(STATUS, "ang5: %9.3f%9.3f\n", b_ang[5]*rad2deg, ang_f[5]*rad2deg);
+         fprintf(STATUS, "ang6: %9.3f%9.3f\n", b_ang[6]*rad2deg, ang_f[6]*rad2deg);
   
-         c_bnd_len(r_soln_c[index][0],r_soln_o[index][0],&olen_f[0]);
-         c_bnd_len(r_soln_c[index][1],r_soln_o[index][1],&olen_f[1]);
-         c_bnd_len(r_soln_c[index][2],r_soln_o[index][2],&olen_f[2]);
-         c_bnd_len(r_soln_a[index][0],r_soln_s[0][0],&slen_f[0]);
-         c_bnd_len(r_soln_a[index][1],r_soln_s[1][0],&slen_f[1]);
-         c_bnd_len(r_soln_a[index][2],r_soln_s[2][0],&slen_f[2]);
-         fprintf(STATUS,"\nlen_o0: %9.3f%9.3f\n", olen_i[0], olen_f[0]);
-         fprintf(STATUS,"len_o1: %9.3f%9.3f\n", olen_i[1], olen_f[1]);
-         fprintf(STATUS,"len_o2: %9.3f%9.3f\n", olen_i[2], olen_f[2]);
+         c_bnd_len(r_soln_c[index][0], r_soln_o[index][0], &olen_f[0]);
+         c_bnd_len(r_soln_c[index][1], r_soln_o[index][1], &olen_f[1]);
+         c_bnd_len(r_soln_c[index][2], r_soln_o[index][2], &olen_f[2]);
+         c_bnd_len(r_soln_a[index][0], r_soln_s[0][0], &slen_f[0]);
+         c_bnd_len(r_soln_a[index][1], r_soln_s[1][0], &slen_f[1]);
+         c_bnd_len(r_soln_a[index][2], r_soln_s[2][0], &slen_f[2]);
+         fprintf(STATUS, "\nlen_o0: %9.3f%9.3f\n", olen_i[0], olen_f[0]);
+         fprintf(STATUS, "len_o1: %9.3f%9.3f\n", olen_i[1], olen_f[1]);
+         fprintf(STATUS, "len_o2: %9.3f%9.3f\n", olen_i[2], olen_f[2]);
 	 if(strcmp(native_residue[n0].res, "GLY")!=0)
-           fprintf(STATUS,"\nlen_s0: %9.3f%9.3f\n", slen_i[0], slen_f[0]);
+           fprintf(STATUS, "\nlen_s0: %9.3f%9.3f\n", slen_i[0], slen_f[0]);
 	 if(strcmp(native_residue[n0+1].res, "GLY")!=0)
-           fprintf(STATUS,"len_s1: %9.3f%9.3f\n", slen_i[1], slen_f[1]);
+           fprintf(STATUS, "len_s1: %9.3f%9.3f\n", slen_i[1], slen_f[1]);
 	 if(strcmp(native_residue[n0+2].res, "GLY")!=0)
-           fprintf(STATUS,"len_s2: %9.3f%9.3f\n", slen_i[2], slen_f[2]);
+           fprintf(STATUS, "len_s2: %9.3f%9.3f\n", slen_i[2], slen_f[2]);
   
-	 fprintf(STATUS,"\n");
+	 fprintf(STATUS, "\n");
 	 c_bnd_ang(r0_a[0], r0_c[0], r0_o[0], &oang_i);
 	 c_bnd_ang(r_soln_a[index][0], r_soln_c[index][0], r_soln_o[index][0], &oang_f);
-	 fprintf(STATUS,"ang1_o0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	 fprintf(STATUS, "ang1_o0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_n[1], r0_c[0], r0_o[0], &oang_i);
 	 c_bnd_ang(r_soln_n[index][1], r_soln_c[index][0], r_soln_o[index][0], &oang_f);
-	 fprintf(STATUS,"ang2_o0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	 fprintf(STATUS, "ang2_o0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_a[1], r0_c[1], r0_o[1], &oang_i);
 	 c_bnd_ang(r_soln_a[index][1], r_soln_c[index][1], r_soln_o[index][1], &oang_f);
-	 fprintf(STATUS,"ang1_o1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	 fprintf(STATUS, "ang1_o1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 */  //	 c_bnd_ang(r0_n[2], r0_c[1], r0_o[1], &oang_i);
 //	 c_bnd_ang(r_soln_n[index][2], r_soln_c[index][1], r_soln_o[index][1], &oang_f);
-//	 fprintf(STATUS,"ang2_o1:             %9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+//	 fprintf(STATUS, "ang2_o1:             %9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 /*	 c_bnd_ang(r0_a[2], r0_c[2], r0_o[2], &oang_i);
 	 c_bnd_ang(r_soln_a[index][2], r_soln_c[index][2], r_soln_o[index][2], &oang_f);
-	 fprintf(STATUS,"ang1_o2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	 fprintf(STATUS, "ang1_o2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r_n[4], r0_c[2], r0_o[2], &oang_i);
 	 c_bnd_ang(r_n[4], r_soln_c[index][2], r_soln_o[index][2], &oang_f);
-	 fprintf(STATUS,"ang2_o2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	 fprintf(STATUS, "ang2_o2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 
-	 fprintf(STATUS,"\n");
+	 fprintf(STATUS, "\n");
 	 c_bnd_ang(r0_n[0], r0_a[0], r0_s[0][0], &oang_i);
 	 c_bnd_ang(r_soln_n[index][0], r_soln_a[index][0], r_soln_s[0][0], &oang_f);
 	 if(strcmp(native_residue[n0].res, "GLY")!=0)
-	   fprintf(STATUS,"ang1_s0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang1_s0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_c[0], r0_a[0], r0_s[0][0], &oang_i);
 	 c_bnd_ang(r_soln_c[index][0], r_soln_a[index][0], r_soln_s[0][0], &oang_f);
 	 if(strcmp(native_residue[n0].res, "GLY")!=0)
-	   fprintf(STATUS,"ang2_s0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang2_s0:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_n[1], r0_a[1], r0_s[1][0], &oang_i);
 	 c_bnd_ang(r_soln_n[index][1], r_soln_a[index][1], r_soln_s[1][0], &oang_f);
 	 if(strcmp(native_residue[n0+1].res, "GLY")!=0)
-	   fprintf(STATUS,"ang1_s1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang1_s1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_c[1], r0_a[1], r0_s[1][0], &oang_i);
 	 c_bnd_ang(r_soln_c[index][1], r_soln_a[index][1], r_soln_s[1][0], &oang_f);
 	 if(strcmp(native_residue[n0+1].res, "GLY")!=0)
-	   fprintf(STATUS,"ang2_s1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang2_s1:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_n[2], r0_a[2], r0_s[2][0], &oang_i);
 	 c_bnd_ang(r_soln_n[index][2], r_soln_a[index][2], r_soln_s[2][0], &oang_f);
 	 if(strcmp(native_residue[n0+2].res, "GLY")!=0)
-	   fprintf(STATUS,"ang1_s2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang1_s2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 	 c_bnd_ang(r0_c[2], r0_a[2], r0_s[2][0], &oang_i);
 	 c_bnd_ang(r_soln_c[index][2], r_soln_a[index][2], r_soln_s[2][0], &oang_f);
 	 if(strcmp(native_residue[n0+2].res, "GLY")!=0)
-	   fprintf(STATUS,"ang1_s2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
+	   fprintf(STATUS, "ang1_s2:%9.3f%9.3f\n", oang_i*rad2deg, oang_f*rad2deg);
 */	 
 //	 c_bnd_ang(r0_s[1][0], r0_s[1][1], r0_s[1][2], &oang_i);
 //	 c_bnd_ang(r_soln_s[1][0], r_soln_s[1][1], r_soln_s[1][2], &oang_f);
 //	 if((strcmp(res_name[2], "GLY")!=0) &&(ns[2] >= 3))
 //	  {
-//	   fprintf(STATUS,"s1: x_i(0,1,2): %9.5f%9.5f%9.5f\n", r0_s[1][0][0], r0_s[1][1][0], r0_s[1][2][0]);
-//	   fprintf(STATUS,"s1: x_f(0,1,2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][0], r_soln_s[1][1][0], r_soln_s[1][2][0]);
-//	   fprintf(STATUS,"s1: y_i(0,1,2): %9.5f%9.5f%9.5f\n", r0_s[1][0][1], r0_s[1][1][1], r0_s[1][2][1]);
-//	   fprintf(STATUS,"s1: y_f(0,1,2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][1], r_soln_s[1][1][1], r_soln_s[1][2][1]);
-//	   fprintf(STATUS,"s1: z_i(0,1,2): %9.5f%9.5f%9.5f\n", r0_s[1][0][2], r0_s[1][1][2], r0_s[1][2][2]);
-//	   fprintf(STATUS,"s1: z_f(0,1,2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][2], r_soln_s[1][1][2], r_soln_s[1][2][2]);
-//	   fprintf(STATUS,"res: %s  s1: ang_side(0,1,2): %9.3f%9.3f\n", res_name[2], oang_i*rad2deg, oang_f*rad2deg);
+//	   fprintf(STATUS, "s1: x_i(0, 1, 2): %9.5f%9.5f%9.5f\n", r0_s[1][0][0], r0_s[1][1][0], r0_s[1][2][0]);
+//	   fprintf(STATUS, "s1: x_f(0, 1, 2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][0], r_soln_s[1][1][0], r_soln_s[1][2][0]);
+//	   fprintf(STATUS, "s1: y_i(0, 1, 2): %9.5f%9.5f%9.5f\n", r0_s[1][0][1], r0_s[1][1][1], r0_s[1][2][1]);
+//	   fprintf(STATUS, "s1: y_f(0, 1, 2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][1], r_soln_s[1][1][1], r_soln_s[1][2][1]);
+//	   fprintf(STATUS, "s1: z_i(0, 1, 2): %9.5f%9.5f%9.5f\n", r0_s[1][0][2], r0_s[1][1][2], r0_s[1][2][2]);
+//	   fprintf(STATUS, "s1: z_f(0, 1, 2): %9.5f%9.5f%9.5f\n", r_soln_s[1][0][2], r_soln_s[1][1][2], r_soln_s[1][2][2]);
+//	   fprintf(STATUS, "res: %s  s1: ang_side(0, 1, 2): %9.3f%9.3f\n", res_name[2], oang_i*rad2deg, oang_f*rad2deg);
 //	  }
 
-         for(i=0;i<3;i++)
-	   for(j=0;j<3;j++)
+         for (i=0;i<3;i++)
+	   for (j=0;j<3;j++)
 	    {
 	     r_n[i+1][j] = r_soln_n[index][i][j];
 	     r_a[i+1][j] = r_soln_a[index][i][j];
 	     r_c[i+1][j] = r_soln_c[index][i][j];
 	     r_o[i+1][j] = r_soln_o[index][i][j];
-             for(z=0;z<ns[i+1];z++)
+             for (z=0;z<ns[i+1];z++)
 	       r_s[i+1][z][j] = r_soln_s[i][z][j];
 	    } 
 	 
@@ -927,7 +927,7 @@ void get_template()
   int prev_tmpl = 0;
   int len_tmpl = 0;
 
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
    {
     initial_template[i] = 0;
     len_template[i] = 0;
@@ -935,21 +935,21 @@ void get_template()
 
   if((the_file = fopen(template_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", template_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", template_file);
     exit(1);
    }
-  while(fgets(line,100,the_file) != NULL)
+  while(fgets(line, 100, the_file) != NULL)
    {
-    if (strncmp(line,"ATOM",4) == 0)
+    if (strncmp(line, "ATOM", 4) == 0)
      {
-      strncpy(temp, &(line[22]),4);
-      strcpy(&temp[4],"\0");
+      strncpy(temp, &(line[22]), 4);
+      strcpy(&temp[4], "\0");
       initial_template[atoi(temp)-1] = 1;
      }
    }
   fclose(the_file);
 
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
    {
     if ((prev_tmpl==0)&&(initial_template[i]==1))
       len_tmpl = 1;
@@ -957,24 +957,24 @@ void get_template()
       len_tmpl++;
     else if ((prev_tmpl==1)&&(initial_template[i]==0))
      {
-      for(j=i-len_tmpl;j<i;j++)
+      for (j=i-len_tmpl;j<i;j++)
 	len_template[j] = len_tmpl;
       len_tmpl = 0;
      }
     if ((i==nresidues-1)&&(initial_template[i]==1))
-      for(j=i-len_tmpl+1;j<=i;j++)
+      for (j=i-len_tmpl+1;j<=i;j++)
 	len_template[j] = len_tmpl;
     prev_tmpl = initial_template[i];
    }
   
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
     if (len_template[i]<MIN_LEN_TEMPLATE)
       mod_template[i] = 0;
     else
       mod_template[i] = initial_template[i];
 
   prev_tmpl = 0;
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
    {
     if ((prev_tmpl==0)&&(mod_template[i]==1)&&(i!=0))
       is_template[i] = 0;
@@ -984,8 +984,8 @@ void get_template()
       is_template[i] = mod_template[i];
     prev_tmpl = mod_template[i];
    }
-  for(i=0;i<nresidues;i++){
-    fprintf(STATUS,"%5d%5d%5d%5d%5d\n", i, initial_template[i], len_template[i], mod_template[i], is_template[i]);
+  for (i=0;i<nresidues;i++){
+    fprintf(STATUS, "%5d%5d%5d%5d%5d\n", i, initial_template[i], len_template[i], mod_template[i], is_template[i]);
     fflush(STATUS);
   }
   return;
@@ -994,25 +994,25 @@ void get_template()
 //========================================================================================================
 void check_bb()
  {
-  struct vector tmp1,tmp2,tmp3,tmp4, plane1,plane2, bisect1,bisect2;
+  struct vector tmp1, tmp2, tmp3, tmp4, plane1, plane2, bisect1, bisect2;
   int i;
    
-  for(i=0;i<nresidues-2;i++)
+  for (i=0;i<nresidues-2;i++)
    {
     MakeVector(native[native_residue[i].CA].xyz, native[native_residue[i].N].xyz, &tmp1);
     MakeVector(native[native_residue[i].CA].xyz, native[native_residue[i].O].xyz, &tmp2);
     MakeVector(native[native_residue[i+2].CA].xyz, native[native_residue[i+2].N].xyz, &tmp3);
     MakeVector(native[native_residue[i+2].CA].xyz, native[native_residue[i+2].O].xyz, &tmp4);
-    CrossProduct(tmp1,tmp2,&plane1);
-    CrossProduct(tmp3,tmp4,&plane2);
+    CrossProduct(tmp1, tmp2, &plane1);
+    CrossProduct(tmp3, tmp4, &plane2);
     a_PCA[i] = Angle(plane1, plane2);
     a_PCA[i] *= rad2deg;
     Normalize(&tmp1);
     Normalize(&tmp2);
     Normalize(&tmp3);
     Normalize(&tmp4);
-    bisect(tmp1,tmp2,&bisect1);
-    bisect(tmp3,tmp4,&bisect2);
+    bisect(tmp1, tmp2, &bisect1);
+    bisect(tmp3, tmp4, &bisect2);
     a_bCA[i] = Angle(bisect1, bisect2);
     a_bCA[i] *= rad2deg;
 
@@ -1029,7 +1029,7 @@ void check_bb()
     phim[i] += 180.;
     psim[i] += 180.;
 
-//    fprintf(STATUS,"%4d %4d %9.3f %9.3f %9.3f %9.3f %9.3f\n", i+1, i+2,  dih_CA[i], ang_CA[i], ang_CA[i+1], len12_CA[i], len03_CA[i]);
+//    fprintf(STATUS, "%4d %4d %9.3f %9.3f %9.3f %9.3f %9.3f\n", i+1, i+2,  dih_CA[i], ang_CA[i], ang_CA[i+1], len12_CA[i], len03_CA[i]);
    }
   
   return;
@@ -1044,20 +1044,20 @@ void initialize_torsion()
   FILE *ftor;
   char line[1000];
       
-  for(r=0;r<nresidues;r++)
-    for(x=0;x<6;x++)
-      for(y=0;y<6;y++)
-        for(z=0;z<6;z++)
-          for(w=0;w<6;w++)
+  for (r=0;r<nresidues;r++)
+    for (x=0;x<6;x++)
+      for (y=0;y<6;y++)
+        for (z=0;z<6;z++)
+          for (w=0;w<6;w++)
             torsion_E[r][x][y][z][w] = 1000;
 
-  fprintf(STATUS,"Opening the file: %s\n", triplet_file);
-  if((ftor=fopen(triplet_file,"r"))==NULL)
+  fprintf(STATUS, "Opening the file: %s\n", triplet_file);
+  if((ftor=fopen(triplet_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", triplet_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", triplet_file);
     exit(1);
    }
-  while(fgets(line,200,ftor)!=NULL)
+  while(fgets(line, 200, ftor)!=NULL)
    {
     sscanf(line, "%d %*d%*d%*d %d %d %d %d %d %*s%*s", &cur_res, &x, &y, &z, &w, &value); 
     torsion_E[cur_res][x][y][z][w] = value;
@@ -1076,24 +1076,24 @@ void initialize_sct()
   FILE *ftor;
   char line[1000];
 
-  for(r=0;r<nresidues;r++)
-    for(x=0;x<12;x++)
-      for(y=0;y<12;y++)
-        for(z=0;z<12;z++)
-          for(w=0;w<12;w++)
+  for (r=0;r<nresidues;r++)
+    for (x=0;x<12;x++)
+      for (y=0;y<12;y++)
+        for (z=0;z<12;z++)
+          for (w=0;w<12;w++)
             sct_E[r][x][y][z][w] = 1000;
 
-  fprintf(STATUS,"Opening the file: %s\n", sctorsion_file);
-  if((ftor=fopen(sctorsion_file,"r"))==NULL)
+  fprintf(STATUS, "Opening the file: %s\n", sctorsion_file);
+  if((ftor=fopen(sctorsion_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", sctorsion_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", sctorsion_file);
     exit(1);
    }
-  while(fgets(line,200,ftor)!=NULL)
+  while(fgets(line, 200, ftor)!=NULL)
    {
     sscanf(line, "%d %*d%*d%*d %d %d %d %d %d %*s%*s", &cur_res, &x, &y, &z, &w, &value);
     sct_E[cur_res][x][y][z][w] = value;
-//    fprintf(STATUS,"%10d\n", sct_E[cur_res][x][y][z][w]);
+//    fprintf(STATUS, "%10d\n", sct_E[cur_res][x][y][z][w]);
    }
   fclose(ftor);
 
@@ -1109,26 +1109,26 @@ void initialize_aromatic()
   FILE *ftor;
   char line[1000];
 
-  fprintf(STATUS,"Opening the file: %s\n", aromatic_file);
-  if((ftor=fopen(aromatic_file,"r"))==NULL)
+  fprintf(STATUS, "Opening the file: %s\n", aromatic_file);
+  if((ftor=fopen(aromatic_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", aromatic_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", aromatic_file);
     exit(1);
    }
-  while(fgets(line,200,ftor)!=NULL)
+  while(fgets(line, 200, ftor)!=NULL)
    {
     sscanf(line, "%d %d %*s%*s", &x, &value); 
     aromatic_E[x] = value;
-//    fprintf(STATUS,"%2d %5d\n", x, aromatic_E[x]);
+//    fprintf(STATUS, "%2d %5d\n", x, aromatic_E[x]);
    }
   fclose(ftor);
 
-  for(r=0;r<nresidues;r++)
-    if((strcmp(native_residue[r].res,"PHE")==0) || (strcmp(native_residue[r].res,"TRP")==0) ||
-       (strcmp(native_residue[r].res,"RING")==0))
+  for (r=0;r<nresidues;r++)
+    if((strcmp(native_residue[r].res, "PHE")==0) || (strcmp(native_residue[r].res, "TRP")==0) ||
+       (strcmp(native_residue[r].res, "RING")==0))
      {
       Res_aromatic[Naromatic] = r;
-//      fprintf(STATUS,"%5d %5d\n", Naromatic, Res_aromatic[Naromatic]);
+//      fprintf(STATUS, "%5d %5d\n", Naromatic, Res_aromatic[Naromatic]);
       Naromatic++;
      }
   return;
@@ -1187,19 +1187,19 @@ void read_cluster()
  {
   FILE *fcluster;
   int cur_res;
-//  int i,j;
+//  int i, j;
   int temp_value=0;
   float x, y;
   char cluster_file[100], line[1000];
   
-  sprintf(cluster_file,"../config_files/center%d_state", NOCLUSTERS); 
-  fprintf(STATUS,"Opening the file: %s\n", cluster_file);
-  if((fcluster=fopen(cluster_file,"r"))==NULL)
+  sprintf(cluster_file, "../config_files/center%d_state", NOCLUSTERS); 
+  fprintf(STATUS, "Opening the file: %s\n", cluster_file);
+  if((fcluster=fopen(cluster_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", cluster_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", cluster_file);
     exit(1);
    }
-  while(fgets(line,200,fcluster)!=NULL)
+  while(fgets(line, 200, fcluster)!=NULL)
    {
     temp_value = temp_value%NOCLUSTERS;
     sscanf(line, "%d %f %f", &cur_res, &x, &y); 
@@ -1208,9 +1208,9 @@ void read_cluster()
     temp_value++;
    }
   fclose(fcluster);
-//  for(i=0;i<20;i++)
-//    for(j=0;j<NOCLUSTERS;j++)
-//      fprintf(STATUS,"%d %d %8.5f %8.5f\n", i, j, cluster_phi[i][j], cluster_psi[i][j]);
+//  for (i=0;i<20;i++)
+//    for (j=0;j<NOCLUSTERS;j++)
+//      fprintf(STATUS, "%d %d %8.5f %8.5f\n", i, j, cluster_phi[i][j], cluster_psi[i][j]);
   return;
  }
 
@@ -1222,7 +1222,7 @@ void check_phipsi()
   double res_C[MAXSEQUENCE][3];
   int i;
    
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
    {
     res_N[i][0] = native[native_residue[i].N].xyz.x; 
     res_N[i][1] = native[native_residue[i].N].xyz.y; 
@@ -1235,13 +1235,13 @@ void check_phipsi()
     res_C[i][2] = native[native_residue[i].C].xyz.z; 
    }
    
-  for(i=0;i<nresidues-2;i++)
+  for (i=0;i<nresidues-2;i++)
    {
     c_dih_ang(res_C[i], res_N[i+1], res_CA[i+1], res_C[i+1], &cur_phi[i]);
     c_dih_ang(res_N[i+1], res_CA[i+1], res_C[i+1], res_N[i+2], &cur_psi[i]);
     cur_phi[i] *= rad2deg;
     cur_psi[i] *= rad2deg;
-//    fprintf(STATUS,"%4d %4d %9.3f %9.3f %9.3f %9.3f %9.3f\n", i+1, i+2,  dih_CA[i], ang_CA[i], ang_CA[i+1], len12_CA[i], len03_CA[i]);
+//    fprintf(STATUS, "%4d %4d %9.3f %9.3f %9.3f %9.3f %9.3f\n", i+1, i+2,  dih_CA[i], ang_CA[i], ang_CA[i+1], len12_CA[i], len03_CA[i]);
    }
   
   return;
@@ -1256,19 +1256,19 @@ void initialize_secstr()
   char tmp_str[10];
   int i;
       
-  fprintf(STATUS,"Opening the file: %s\n", sec_str_file);
-  if((ftor=fopen(sec_str_file,"r"))==NULL)
+  fprintf(STATUS, "Opening the file: %s\n", sec_str_file);
+  if((ftor=fopen(sec_str_file, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", sec_str_file);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", sec_str_file);
     exit(1);
    }
-  fgets(line,500,ftor);
+  fgets(line, 500, ftor);
   sscanf(line, "%s", iscorrect); 
-  fgets(line,500,ftor);
+  fgets(line, 500, ftor);
   sscanf(line, "%s", secstr_org); 
   fclose(ftor);
 
-  for(i=0;i<nresidues;i++)
+  for (i=0;i<nresidues;i++)
    {
     sprintf(tmp_str, "%c", iscorrect[i]);
     if((atoi(tmp_str) >= CUT_SECSTR)&&secstr_org[i]=='H')
@@ -1280,10 +1280,10 @@ void initialize_secstr()
     else
       secstr[i] = 'C';
    }
-  fprintf(STATUS,"\n");
-  //fprintf(STATUS,"secondary structure correct?\n%s\n",iscorrect);
-  //fprintf(STATUS,"input secondary structure:\n%s\n",secstr_org);
-  fprintf(STATUS,"secondary structure:\n%s\n",secstr);
+  fprintf(STATUS, "\n");
+  //fprintf(STATUS, "secondary structure correct?\n%s\n", iscorrect);
+  //fprintf(STATUS, "input secondary structure:\n%s\n", secstr_org);
+  fprintf(STATUS, "secondary structure:\n%s\n", secstr);
 
   return;
  }

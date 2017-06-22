@@ -59,8 +59,8 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
     {
       for (i = order; i >= 0; i--) 
 	{
-	  fprintf(STATUS,"coefficients in Sturm solver\n");
-	  fprintf(STATUS,"%d %lf\n", i, sseq[0].coef[i]);
+	  fprintf(STATUS, "coefficients in Sturm solver\n");
+	  fprintf(STATUS, "%d %lf\n", i, sseq[0].coef[i]);
 	}
     }
 
@@ -71,17 +71,17 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
   
   if (PRINT_LEVEL > 0) 
     {
-      fprintf(STATUS,"Sturm sequence for:\n");
+      fprintf(STATUS, "Sturm sequence for:\n");
       for (i = order; i >= 0; i--)
-	fprintf(STATUS,"%lf ", sseq[0].coef[i]);
-      fprintf(STATUS,"\n\n");
+	fprintf(STATUS, "%lf ", sseq[0].coef[i]);
+      fprintf(STATUS, "\n\n");
       for (i = 0; i <= np; i++) 
 	{
 	  for (j = sseq[i].ord; j >= 0; j--)
-	    fprintf(STATUS,"%lf ", sseq[i].coef[j]);
-	  fprintf(STATUS,"\n");
+	    fprintf(STATUS, "%lf ", sseq[i].coef[j]);
+	  fprintf(STATUS, "\n");
 	}
-      fprintf(STATUS,"\n");
+      fprintf(STATUS, "\n");
     }
 
   /* 
@@ -93,13 +93,13 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
 
   if (nroots == 0) 
     {
-      // fprintf(STATUS,"solve: no real roots\n");
+      // fprintf(STATUS, "solve: no real roots\n");
       *n_root = nroots;
       return;
     }
 
   if (PRINT_LEVEL > 0) 
-    fprintf(STATUS,"Number of real roots: %d\n", nroots);
+    fprintf(STATUS, "Number of real roots: %d\n", nroots);
  
   /*
    * calculate the bracket that the roots live in
@@ -113,7 +113,7 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
   }
 
   if (nchanges != atmin) {
-    fprintf(STATUS,"solve: unable to bracket all negative roots\n");
+    fprintf(STATUS, "solve: unable to bracket all negative roots\n");
     atmin = nchanges;
   }
 
@@ -125,7 +125,7 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
   }
   
   if (nchanges != atmax) {
-    fprintf(STATUS,"solve: unable to bracket all positive roots\n");
+    fprintf(STATUS, "solve: unable to bracket all positive roots\n");
     atmax = nchanges;
   }
 
@@ -145,13 +145,13 @@ void solve_sturm(int *p_order, int *n_root, double *poly_coeffs, double *roots)
   if (PRINT_LEVEL > 0) 
     {
       if (nroots == 1) {
-	fprintf(STATUS,"\n1 distinct real root at x = %f\n", roots[0]);
+	fprintf(STATUS, "\n1 distinct real root at x = %f\n", roots[0]);
       } else {
-	fprintf(STATUS,"\n%d distinct real roots for x: \n", nroots);
+	fprintf(STATUS, "\n%d distinct real roots for x: \n", nroots);
 	
 	for (i = 0; i != nroots; i++)
 	  {
-	    fprintf(STATUS,"%f\n", roots[i]);
+	    fprintf(STATUS, "%f\n", roots[i]);
 	  }
       }
     }
@@ -331,7 +331,7 @@ int numroots(int np, poly *sseq, int *atneg, int *atpos)
 
 	*atneg = atneginf;
 	*atpos = atposinf;
-	//	fprintf(STATUS,"atneginf, atposinf = %d %d\n", atneginf, atposinf);
+	//	fprintf(STATUS, "atneginf, atposinf = %d %d\n", atneginf, atposinf);
 	return(atneginf - atposinf);
 }
 
@@ -360,10 +360,10 @@ int numchanges(int np, poly *sseq, double a)
 			if (lf == 0.0 || lf * f < 0)
 				changes++;
 			lf = f;
-//			fprintf(STATUS,"lf %lf %d \n", f, changes);
+//			fprintf(STATUS, "lf %lf %d \n", f, changes);
 	}
 
-	//	fprintf(STATUS,"%d \n", changes);
+	//	fprintf(STATUS, "%d \n", changes);
 	return(changes);
 }
 
@@ -371,7 +371,7 @@ int numchanges(int np, poly *sseq, double a)
  * sbisect
  *
  *	uses a bisection based on the sturm sequence for the polynomial
- * described in sseq to isolate intervals in which roots occur,
+ * described in sseq to isolate intervals in which roots occur, 
  * the roots are returned in the roots array in order of magnitude.
  */
 void sbisect(int np, poly *sseq, double min, double max, int atmin, int atmax, double *roots)
@@ -390,11 +390,11 @@ void sbisect(int np, poly *sseq, double min, double max, int atmin, int atmax, d
       /*
        * first try a less expensive technique.
        */
-      //      fprintf(STATUS,"min max %lf, %lf \n", min, max);
+      //      fprintf(STATUS, "min max %lf, %lf \n", min, max);
       if (modrf(sseq->ord, sseq->coef, min, max, &roots[0]))
 	return;
 
-      //      fprintf(STATUS,"try hard way\n");
+      //      fprintf(STATUS, "try hard way\n");
       /*
        * if we get here we have to evaluate the root the hard
        * way by using the Sturm sequence.
@@ -428,7 +428,7 @@ void sbisect(int np, poly *sseq, double min, double max, int atmin, int atmax, d
       if (its == MAXIT) 
 	{
 	  fprintf(stderr, "sbisect: overflow min %f max %f\
-					diff %e nroot %d n1 %d n2 %d\n",
+					diff %e nroot %d n1 %d n2 %d\n", 
 		  min, max, max - min, nroot, n1, n2);
 	  roots[0] = mid;
 	}
@@ -467,7 +467,7 @@ void sbisect(int np, poly *sseq, double min, double max, int atmin, int atmax, d
       /*
       fprintf(stderr, "sbisect: roots too close together\n");
       fprintf(stderr, "sbisect: overflow min %f max %f diff %e\
-				nroot %d n1 %d n2 %d\n",
+				nroot %d n1 %d n2 %d\n", 
 	      min, max, max - min, nroot, n1, n2);
       */
       for (n1 = atmax; n1 < atmin; n1++)
@@ -500,7 +500,7 @@ double evalpoly(int ord, double *coef, double x)
  * modrf
  *
  *	uses the modified regula-falsi method to evaluate the root
- * in interval [a,b] of the polynomial described in coef. The
+ * in interval [a, b] of the polynomial described in coef. The
  * root is returned is returned in *val. The routine returns zero
  * if it can't converge.
  */
@@ -559,14 +559,14 @@ int modrf(int ord, double *coef, double	a, double b, double *val)
 	  if (fabs(fx / x) < RELERROR) 
 	    {
 	      *val = x;
-	      //	      fprintf(STATUS," x, fx %lf %lf\n", x, fx);
+	      //	      fprintf(STATUS, " x, fx %lf %lf\n", x, fx);
 	      return(1);
 	    }
 	} 
       else if (fabs(fx) < RELERROR) 
 	{
 	  *val = x;
-	  //	  fprintf(STATUS," x, fx %lf %lf\n", x, fx);
+	  //	  fprintf(STATUS, " x, fx %lf %lf\n", x, fx);
 	  return(1);
 	}
 

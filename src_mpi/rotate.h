@@ -39,7 +39,7 @@ void DoRotation(int a, int b, int c, int d, Float delta_angle, short rotate_nato
 
   /* rotate each vector */
 
-  for(j=0; j<rotate_natoms; j++) {
+  for (j=0; j<rotate_natoms; j++) {
     temp_atom = &native[rotate_atom[j]];
     u.x = temp_atom->xyz.x - temp_xyz.x;
     u.y = temp_atom->xyz.y - temp_xyz.y;

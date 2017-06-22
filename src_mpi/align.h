@@ -7,13 +7,13 @@ void SetAlignHardCore() {
   Float rad1, rad2;
 
   if (!USE_GO_POTENTIAL) {
-    align_hard_core = (Float **) calloc(MAX_TYPES,sizeof(Float *));
-    for(i=0; i<MAX_TYPES; i++)
-      align_hard_core[i] = (Float *) calloc(MAX_TYPES,sizeof(Float));
+    align_hard_core = (Float **) calloc(MAX_TYPES, sizeof(Float *));
+    for (i=0; i<MAX_TYPES; i++)
+      align_hard_core[i] = (Float *) calloc(MAX_TYPES, sizeof(Float));
     
-    for(i=0; i<MAX_TYPES; i++)
-      for(j=0; j<MAX_TYPES; j++) {   
-	for (k = 0; k < natom_type_list; ++k)
+    for (i=0; i<MAX_TYPES; i++)
+      for (j=0; j<MAX_TYPES; j++) {   
+	for (k=0; k<natom_type_list; ++k)
 	  if (i == atom_type_list[k].type_num)
 	    break;
 	rad1 = radii[TypeAtom(atom_type_list[k].atom_name, atom_type_list[k].res_name)];
@@ -25,14 +25,13 @@ void SetAlignHardCore() {
 	temp = ALPHA*(rad1 + rad2);
 	align_hard_core[i][j] = temp*temp;
       }
-  }
-  else {     
-    align_hard_core = (Float **) calloc(struct_natoms,sizeof(Float *));
-    for(i=0; i<struct_natoms; i++)
-      align_hard_core[i] = (Float *) calloc(struct_natoms,sizeof(Float));
+  } else {     
+    align_hard_core = (Float **) calloc(struct_natoms, sizeof(Float *));
+    for (i=0; i<struct_natoms; i++)
+      align_hard_core[i] = (Float *) calloc(struct_natoms, sizeof(Float));
     
-    for(i=0; i<struct_natoms; i++)
-      for(j=0; j<struct_natoms; j++) {   	
+    for (i=0; i<struct_natoms; i++)
+      for (j=0; j<struct_natoms; j++) {
 	rad1 = radii[struct_native[i].atomtype];
 	rad2 = radii[struct_native[j].atomtype];
 
@@ -50,12 +49,12 @@ void SetAlignContactDistance() {
   int i, j, k;
 
   if (!USE_GO_POTENTIAL) {
-    align_con_dist = (struct align_cutoff **) calloc(MAX_TYPES,sizeof(struct align_cutoff *));
-    for(i=0; i<MAX_TYPES; i++)
-      align_con_dist[i] = (struct align_cutoff *) calloc(MAX_TYPES,sizeof(struct align_cutoff));
+    align_con_dist = (struct align_cutoff **) calloc(MAX_TYPES, sizeof(struct align_cutoff *));
+    for (i=0; i<MAX_TYPES; i++)
+      align_con_dist[i] = (struct align_cutoff *) calloc(MAX_TYPES, sizeof(struct align_cutoff));
     
-    for(i=0; i<MAX_TYPES; i++)
-      for(j=0; j<MAX_TYPES; j++) {
+    for (i=0; i<MAX_TYPES; i++)
+      for (j=0; j<MAX_TYPES; j++) {
 	for (k = 0; k < natom_type_list; ++k)
 	  if (i == atom_type_list[k].type_num)
 	    break;
@@ -92,12 +91,12 @@ void SetAlignContactDistance() {
     } 
   }
   else {
-    align_con_dist = (struct align_cutoff **) calloc(struct_natoms,sizeof(struct align_cutoff *));
-    for(i=0; i<struct_natoms; i++)
-      align_con_dist[i] = (struct align_cutoff *) calloc(struct_natoms,sizeof(struct align_cutoff));
+    align_con_dist = (struct align_cutoff **) calloc(struct_natoms, sizeof(struct align_cutoff *));
+    for (i=0; i<struct_natoms; i++)
+      align_con_dist[i] = (struct align_cutoff *) calloc(struct_natoms, sizeof(struct align_cutoff));
  
-    for(i=0; i<struct_natoms; i++)
-      for(j=0; j<struct_natoms; j++) {
+    for (i=0; i<struct_natoms; i++)
+      for (j=0; j<struct_natoms; j++) {
 	rad1 = radii[struct_native[i].atomtype];
 	rad2 = radii[struct_native[j].atomtype];
 
@@ -112,18 +111,18 @@ void SetAlignContactDistance() {
 
 void ReadHelicityData() {
   int i;
-  char line[10000],line1[10000];
+  char line[10000], line1[10000];
   
-  if((DATA = fopen(helicity_data,"r"))==NULL)
+  if((DATA = fopen(helicity_data, "r"))==NULL)
    {
-    fprintf(STATUS,"ERROR: Can't open the file: %s!\n", helicity_data);
+    fprintf(STATUS, "ERROR: Can't open the file: %s!\n", helicity_data);
     exit(1);
    }
-  fgets(line,10000,DATA);
-  fgets(line,10000,DATA);
-  fgets(line1,10000,DATA);
+  fgets(line, 10000, DATA);
+  fgets(line, 10000, DATA);
+  fgets(line1, 10000, DATA);
   
-  helix = (int *) calloc(strlen(line),sizeof(int));
+  helix = (int *) calloc(strlen(line), sizeof(int));
 
   for (i=0; i<strlen(line); i++) {
     if (line[i]=='H')
@@ -148,9 +147,9 @@ void ReadAlignment() {
     seq2 = nresidues - 1;
     struct1 = 0;
     struct2 = nresidues - 1;
-    for(i = seq1; i <= seq2; ++i)
+    for (i = seq1; i <= seq2; ++i)
       map_to_seq[nalign_seq++] = i;
-    for(i = struct1; i <= struct2; ++i)
+    for (i = struct1; i <= struct2; ++i)
       map_to_struct[nalign_struct++] = i;
     str_segment[nseg].a = struct1;
     str_segment[nseg].b = struct2;
@@ -163,7 +162,7 @@ void ReadAlignment() {
 void AlignCheckForContacts(short a, short b) {
   Float distance;
 
-  distance = D2(struct_native[a].xyz,struct_native[b].xyz);
+  distance = D2(struct_native[a].xyz, struct_native[b].xyz);
 
   if (struct_data[a][b].check_clashes && distance < align_hard_core[struct_native[a].smogtype][struct_native[b].smogtype]){
     struct_data[a][b].clashes=struct_data[b][a].clashes=1;
@@ -189,12 +188,12 @@ void AlignContacts() {
   struct_nclashes=0;
   struct_ncontacts=0; 
 
-  for(i=0; i<struct_natoms; i++) {
-    for(j=i+1; j<struct_natoms; j++) {
+  for (i=0; i<struct_natoms; i++) {
+    for (j=i+1; j<struct_natoms; j++) {
       struct_data[i][j].clashes=struct_data[j][i].clashes=0;
       struct_data[i][j].contacts=struct_data[j][i].contacts=0;
       if (struct_data[i][j].check_contacts || struct_data[i][j].check_clashes)
-	AlignCheckForContacts(i,j);
+	AlignCheckForContacts(i, j);
     }
   }
   return;
@@ -203,24 +202,28 @@ void AlignContacts() {
 void SetupAlignmentStructure() {
   int i;
 
-  struct_native = (struct atom *) calloc(MAX_ATOMS,sizeof(struct atom));
-  ReadNative(structure_file,struct_native,&struct_natoms); 
+  struct_native = (struct atom *) calloc(MAX_ATOMS, sizeof(struct atom));
+  ReadNative(structure_file, struct_native, &struct_natoms);
+  /* despite name, struct_natoms is an int */
  
+  /* this is so unclear:
+   * both functions below use struct_native struct_natoms and a bunch of globals
+   */
   SetAlignHardCore();
   SetAlignContactDistance();
 
-  struct_nresidues=0;
-  for(i=0; i<struct_natoms; i++) 
-    if (!strncmp(struct_native[i].atomname,"CA",2)) 
+  struct_nresidues = 0;
+  for (i=0; i<struct_natoms; i++) 
+    if (!strncmp(struct_native[i].atomname, "CA", 2)) 
       struct_nresidues++;
-  struct_residue = (struct residue *) calloc(struct_nresidues,sizeof(struct residue));
+  struct_residue = (struct residue *) calloc(struct_nresidues, sizeof(struct residue));
   GetResidueInfo(struct_native, struct_residue, struct_nresidues, struct_natoms);  
-  struct_data = (struct contact_data **) calloc(struct_natoms,sizeof(struct contact_data *));
-  for(i=0; i<struct_natoms; i++)
-    struct_data[i] = (struct contact_data *) calloc(struct_natoms,sizeof(struct contact_data));
+  struct_data = (struct contact_data **) calloc(struct_natoms, sizeof(struct contact_data *));
+  for (i=0; i<struct_natoms; i++)
+    struct_data[i] = (struct contact_data *) calloc(struct_natoms, sizeof(struct contact_data));
 
   GetPhiPsi(struct_native, struct_residue, struct_nresidues);
-  CheckCorrelation(struct_data,struct_native,struct_residue,struct_natoms);
+  CheckCorrelation(struct_data, struct_native, struct_residue, struct_natoms);
 
   seq_to_struct = (int *) calloc(nresidues, sizeof(int));
   struct_to_seq = (int *) calloc(struct_nresidues, sizeof(int));
@@ -236,14 +239,14 @@ void SetupAlignmentStructure() {
   } 
 
   AlignContacts();
-  fprintf(STATUS,"---TEMPLATE---\n");
-  fprintf(STATUS,"  # of clashes:\t\t%d\n  # of contacts:\t%d\n\n", struct_nclashes, struct_ncontacts);
+  fprintf(STATUS, "---TEMPLATE---\n");
+  fprintf(STATUS, "  # of clashes:\t\t%d\n  # of contacts:\t%d\n\n", struct_nclashes, struct_ncontacts);
     
 }
 
 void SetupAlignmentPotential() {
   int ngo_seq, ngo_str;
-  int i, j, k, l, m, str_bbA[4],str_bbB[4],seq_bbA[4],seq_bbB[4];
+  int i, j, k, l, m, str_bbA[4], str_bbB[4], seq_bbA[4], seq_bbB[4];
   int **done_pairs;
   struct residue str_resA, str_resB, seq_resA, seq_resB;
   int strA, strB, seqA, seqB;
@@ -296,8 +299,8 @@ void SetupAlignmentPotential() {
 	    potential[seq_bbB[l]][seq_bbA[k]] = NON_SPECIFIC_ENERGY;
 	  }
     }
-  fprintf(STATUS,"Sequence Go, backbone: %d\n", ngo_seq);
-  fprintf(STATUS,"Structure Go, backbone: %d\n", ngo_str);
+  fprintf(STATUS, "Sequence Go, backbone: %d\n", ngo_seq);
+  fprintf(STATUS, "Structure Go, backbone: %d\n", ngo_str);
   
   /* setup alignment side-chain potential */
 
@@ -349,8 +352,8 @@ void SetupAlignmentPotential() {
     }
   
 
-  fprintf(STATUS,"Sequence Go, all: %d\n", ngo_seq);
-  fprintf(STATUS,"Structure Go, all: %d\n", ngo_str);
+  fprintf(STATUS, "Sequence Go, all: %d\n", ngo_seq);
+  fprintf(STATUS, "Structure Go, all: %d\n", ngo_str);
 
   for (i = 0; i < nresidues; ++i)
     free(done_pairs[i]);

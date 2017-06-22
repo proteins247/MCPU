@@ -2,7 +2,7 @@
 #include "Random123/u01fixedpt.h"
 
 /* 
-threefryrand() generates random doubles in the range [0.0,1.0]
+threefryrand() generates random doubles in the range [0.0, 1.0]
 using an algorithm from the Random123 library.
 
 Initialize by calling set_threefry_array with a user-supplied

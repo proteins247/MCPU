@@ -1,3 +1,5 @@
+/* MATRIX_SIZE is set to be 20 in init.h (it's a u. char, not a macro) */
+
 struct cell {
   char X, Y, Z;
   struct cell *neighbors[27];
@@ -28,7 +30,7 @@ void CopyLatticeCoordinates(struct atom A, struct atom *B) {
 void UpdateLattice(short rotate_natoms, short *rotate_atom) {
   int j;
 
-  for(j=0; j<rotate_natoms; j++) {
+  for (j=0; j<rotate_natoms; j++) {
     temp_atom = &native[rotate_atom[j]];
     temp_atom->X = PerBound((int)(floor(temp_atom->xyz.x*LATTICE_SIZE)) + HALF_MATRIX_SIZE);
     temp_atom->Y = PerBound((int)(floor(temp_atom->xyz.y*LATTICE_SIZE)) + HALF_MATRIX_SIZE);
@@ -43,9 +45,9 @@ void UpdateLattice(short rotate_natoms, short *rotate_atom) {
   
 }
 
-void FindLatticeCoordinates (struct atom *ATOM) {
   /* computes which lattice cell the given atom falls into */
   /* also, finds the integer representation of the coordinates */
+void FindLatticeCoordinates (struct atom *ATOM) {
 
   (*ATOM).X = PerBound((int)(floor((*ATOM).xyz.x*LATTICE_SIZE)) + HALF_MATRIX_SIZE);
   (*ATOM).Y = PerBound((int)(floor((*ATOM).xyz.y*LATTICE_SIZE)) + HALF_MATRIX_SIZE);
@@ -61,24 +63,24 @@ void FindLatticeCoordinates (struct atom *ATOM) {
 
 void InitializeMatrix() {
 
-  short i,j,k,a,b,c;
+  short i, j, k, a, b, c;
 
   the_matrix = (struct cell ***) calloc(MATRIX_SIZE, sizeof(struct cell **));
-  for(i=0; i<MATRIX_SIZE; i++) {
+  for (i=0; i<MATRIX_SIZE; i++) {
     the_matrix[i] = (struct cell **) calloc(MATRIX_SIZE, sizeof(struct cell *));
-    for(j=0; j<MATRIX_SIZE; j++)
+    for (j=0; j<MATRIX_SIZE; j++)
       the_matrix[i][j] = (struct cell *) calloc(MATRIX_SIZE, sizeof(struct cell));
   }  
-  for(i=0; i<MATRIX_SIZE; i++)
-    for(j=0; j<MATRIX_SIZE; j++)
-      for(k=0; k<MATRIX_SIZE; k++) {
+  for (i=0; i<MATRIX_SIZE; i++)
+    for (j=0; j<MATRIX_SIZE; j++)
+      for (k=0; k<MATRIX_SIZE; k++) {
 	the_matrix[i][j][k].natoms = 0;
 	the_matrix[i][j][k].X = i;
 	the_matrix[i][j][k].Y = j;
 	the_matrix[i][j][k].Z = k;
-	for(a=-1; a<2; a++)
-	  for(b=-1; b<2; b++)
-	    for(c=-1; c<2; c++) {
+	for (a=-1; a<2; a++)
+	  for (b=-1; b<2; b++)
+	    for (c=-1; c<2; c++) {
 	      the_matrix[i][j][k].neighbors[(a+1)*9+(b+1)*3+(c+1)] = &(the_matrix[PerBound(i+a)][PerBound(j+b)][PerBound(k+c)]);
 	    }
       }

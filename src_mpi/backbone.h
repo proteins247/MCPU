@@ -1,6 +1,8 @@
 #include "define.h"
 #include "misc_util.h"
-Float rot_mat[3][3];
+Float rot_mat[3][3];            /* this is used in vector.h
+                                 * it's beyond me why all variables are globally defined in this file
+                                 */
 #include "vector.h"
 #include "atom.h"
 #include "amino.h"
@@ -104,6 +106,7 @@ short debug_nclashes;
 
 
 /* protein data */
+/* These will be pointers to an array of struct atoms, representing the protein atoms */
 struct atom *native, *prev_native, *orig_native, *native_Emin, *native_RMSDmin;
 struct residue *native_residue;
 int natoms, nresidues;    /* The number of atoms and residues in the structure */
@@ -120,8 +123,8 @@ Float mu, hydrogen_bond;
 /* globals for contacts.h */
 long int distance;
 long int X_int, Y_int, Z_int;
-short M,N,O,P;
-short *A,*B;
+short M, N, O, P;
+short *A, *B;
 struct int_vector temp_xyz_int;
 struct atom *temp_atom, *temp_prev_atom;
 struct cell *temp_cell, *temp_cell3;
@@ -136,7 +139,7 @@ short total_triplets;
 struct pair {short a; short b;};
 struct pair *ab, *cd;
 short total_pairs, total_pairs2;
-short TOTAL_SINGLE_LOOP_MOVES,TOTAL_DOUBLE_LOOP_MOVES,TOTAL_TRIPLE_LOOP_MOVES;
+short TOTAL_SINGLE_LOOP_MOVES, TOTAL_DOUBLE_LOOP_MOVES, TOTAL_TRIPLE_LOOP_MOVES;
 float jacobi_before, jacobi_after;
 int   soln_no_before, soln_no_after;
 int   total_ntorsions;
@@ -178,7 +181,7 @@ Float LATTICE_SIZE;
 Float USE_GLOBAL_BB_MOVES;
 Float YANG_MOVE;
 Float YANG_SCALE;
-int  USE_SIDECHAINS, USE_ROTAMERS, USE_ROT_PROB,NO_NEW_CLASHES;
+int  USE_SIDECHAINS, USE_ROTAMERS, USE_ROT_PROB, NO_NEW_CLASHES;
 int  SKIP_LOCAL_CONTACT_RANGE, SKIP_BB_CONTACT_RANGE;
 Float SIDECHAIN_NOISE;
 unsigned char MATRIX_SIZE, HALF_MATRIX_SIZE;
@@ -200,9 +203,9 @@ float cluster_phi[20][NOCLUSTERS];
 float cluster_psi[20][NOCLUSTERS];
 
 /* parameter file names */
-/* vzhao: I increased the length limits to 500 from 100/150 for these */
 char std_file[500], std_prefix[500]; /* vzhao: added these here from backbone.c */
-char native_file[500], structure_file[500], triplet_file[500], sctorsion_file[500], sec_str_file[500], template_file[500], pdb_out_file[500], amino_data_file[500], rotamer_data_file[500], potential_file[500], atom_type_file[500], helicity_data[500],hydrogen_bonding_data[500];
+/* vzhao: I increased the length limits to 500 from 100/150 for these: */
+char native_file[500], structure_file[500], triplet_file[500], sctorsion_file[500], sec_str_file[500], template_file[500], pdb_out_file[500], amino_data_file[500], rotamer_data_file[500], potential_file[500], atom_type_file[500], helicity_data[500], hydrogen_bonding_data[500];
 /* file names added 12DEC02 IAH */
 char min_etot_file[500], min_drms_file[500];
 char aromatic_file[500];
@@ -211,11 +214,11 @@ char aromatic_file[500];
 long int mcstep, mcstep_Emin, mcstep_RMSDmin;
 int sidechain_step;
 int *cur_rotamers, old_rotamer;
-Float low_E, prev_E,E, native_E, Emin, Emin_pot, Emin_hbond, Emin_tor, Emin_sct, Emin_aro;
+Float low_E, prev_E, E, native_E, Emin, Emin_pot, Emin_hbond, Emin_tor, Emin_sct, Emin_aro;
 float E_RMSDmin_pot, E_RMSDmin_hbond, E_RMSDmin_tor, E_RMSDmin_sct, E_RMSDmin_aro;
 float E_RMSDmin;
 Float dE, dE_pot, prev_E_pot, E_pot;
-int naccepted,n_sidechain_accepted;
+int naccepted, n_sidechain_accepted;
 int nrejected, nothers, nomove;
 int sidemovedone;
 struct monte_carlo {

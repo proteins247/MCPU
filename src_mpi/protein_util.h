@@ -60,7 +60,7 @@ void align_drms(struct atom *protein1, struct residue *residue1, struct atom *pr
   int ca_count=0, i, j;
   
   bbrms_tot = 0;
-  for (i=0; <align_len; ++i)
+  for (i=0; i<align_len; ++i)
     for (j=i+1; j<align_len; ++j) {
 	d1 = sqrt(D2(protein1[residue1[map1[i]].CA].xyz, protein1[residue1[map1[j]].CA].xyz));
 	d2 = sqrt(D2(protein2[residue2[map2[i]].CA].xyz, protein2[residue2[map2[j]].CA].xyz));

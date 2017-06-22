@@ -295,7 +295,7 @@ void Fold(void) {
     }
     /* Make a move */
     MakeMove(STEP_SIZE, USE_GLOBAL_BB_MOVES);
-  }
+  } /* end main folding loop */
 
   sprintf(temp_filename, "%s_Emin.pdb", pdb_out_file);
   PrintPDB_Emin(temp_filename);

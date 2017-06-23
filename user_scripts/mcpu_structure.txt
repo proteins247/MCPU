@@ -1,0 +1,34 @@
+backbone.h defines all variables, does the includes
+
+main:				// in backbone.c
+SetProgramOptions(argc,argv);	// init.h
+
+InitializeMatrix();		// lattice_util.h
+// what does this do?
+
+InitializeProtein();		// init.h
+  ReadNative(native_file, native, &natoms);
+  ReadAlignment();
+
+  [...]
+  SetupAlignmentStructure();	// align.h
+    ReadNative(structure_file, struct_native, &struct_natoms);
+    
+
+Fold();				// fold.h
+  // blah blah make move
+  MakeMove(STEP_SIZE, USE_GLOBAL_BB_MOVES); // move.h
+  
+
+
+
+
+
+
+// often seen:
+
+ResetEnergies(mcstep);
+  // but it doesn't look like this function does anything???
+
+// I feel like there are a lot of parameters in the cfg that id on't understand
+//  are they relevant?

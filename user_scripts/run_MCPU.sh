@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HELP="run_MCPU.sh [options] structure output_directory
+HELP="run_MCPU.sh [options] input_structure output_directory
   Options:
     -h : help
     -n NPROC : specify number of processors and indirectly
@@ -24,11 +24,11 @@ produce_para_remc.pl
 2. Accompanying input files will be generated in the directory
    containing the input protein.
 3. Output will be placed in output_directory, with files named
-   prefix.*, where prefix is the fileroot of the input pdb file.
-4. Only one instance of this script should be running. File cfg and
-   backbone.c in the source get modified, and the executable is
-   compiled in the source dir. Wouldn't want to modify those files
-   while things are running.
+   prefix.*, where prefix is the input pdb file minus .pdb suffix
+4. Only one instance of this script should be running. Prep script
+   save_triple runs in the source dir, and file cfg in the source dir
+   also gets modified. Wouldn't want to modify those files while
+   things are running.
 
 The number of processors dictates the temperature range of the
 simulation because delta T is 0.1, with the
@@ -50,13 +50,15 @@ MCPU_BACKBONE_TEMPLATE=${MCPU_PATH}/src_mpi/backbone.TEMPLATE.c
 # backbone.h char* variables for filenames have been lengthened to 500
 # init.h reading cfg file can accomodate 500 chars/line as opposed to 150
 
-: ${PARTITION:=shakhnovich}
+: ${PARTITION:=shakhnovich}     # this parameter can be changed by running 
+                                #   this script like this:
+                                # PARTITION=mypartition ./run_MCPU.sh [...]
 MEMPERCPU=2048
 ALLOCTIME=1440			# 24 hours
 NPROC=32
 NRUNS=1
 LENGTH=2000000
-EVERY=10
+EVERY=10                        # Every N runs will save structure trajectories
 OUTFREQ=100000                  # print pdb file freq
 
 # input arguments

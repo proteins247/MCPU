@@ -236,7 +236,7 @@ void SetupAlignmentStructure() {
   for (i=0; i <nalign; ++i) {
     seq_to_struct[map_to_seq[i]]=map_to_struct[i];
     struct_to_seq[map_to_struct[i]] = map_to_seq[i];
-  } 
+  }
 
   AlignContacts();
   fprintf(STATUS, "---TEMPLATE---\n");

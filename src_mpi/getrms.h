@@ -245,7 +245,7 @@ void jacobi(float a[5][5], int n, float d[5], float v[5][5], int *nrot){
       z[ip] = 0.0;
     }
   }
-  fprintf(STATUS, "Too many iterations.\n");
-  fprintf(STATUS, "ABORT.\n");
+  fprintf(stderr, "Too many iterations.\n");
+  fprintf(stderr, "ABORT.\n");
   exit(1);
 }

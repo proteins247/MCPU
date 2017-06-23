@@ -145,7 +145,7 @@ void InitializeProtein() {
   native_RMSDmin = (struct atom *) calloc(MAX_ATOMS, sizeof(struct atom));
   prev_native = (struct atom *) calloc(MAX_ATOMS, sizeof(struct atom));
   orig_native = (struct atom *) calloc(MAX_ATOMS, sizeof(struct atom));
-  natoms=0;
+  natoms = 0;
 
   fprintf(STATUS, "Initialized molecular data structures.\n");
  
@@ -1367,6 +1367,8 @@ void SetProgramOptions(int argc, char *argv[]) {
 	hydrogen_bond = value;             
       else if (!strcmp(token, "RMS_WEIGHT"))
 	weight_rms = value;              
+      else if (!strcmp(token, "CONSTRAINT_RMSD"))
+	rmsd_constraint = value;              
       else if (!strcmp(token, "NON_SPECIFIC_ENERGY"))
 	NON_SPECIFIC_ENERGY = value;         
       else if (!strcmp(token, "USE_GLOBAL_BB_MOVES"))

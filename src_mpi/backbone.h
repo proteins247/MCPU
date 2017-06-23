@@ -7,6 +7,7 @@ Float rot_mat[3][3];            /* this is used in vector.h
 #include "atom.h"
 #include "amino.h"
 #include "mpi.h"
+#include "getrms.h"             /* getrms.h was moved up from includes at the bottom because it provides struct backbone */
 
 /* global dummy variables */
 FILE *DATA, *DATA_OUT, *STATUS;
@@ -109,9 +110,18 @@ short debug_nclashes;
 /* These will be pointers to an array of struct atoms, representing the protein atoms */
 struct atom *native, *prev_native, *orig_native, *native_Emin, *native_RMSDmin;
 struct residue *native_residue;
+/* VZ:
+ * The following two used to be defined in fold.h, and struct_f2 again in move.h
+ * struct_f1 holds reference structure backbone.
+ * I've moved them to here because I'd like the functions in move.h to access them
+ * Yes even more global namespace pollution!
+ * A struct backbone has five struct vector named N, CA, C, CB, O 
+ * MAXSEQUENCE is macro for 350
+ */
+struct backbone struct_f1[MAXSEQUENCE], struct_f2[MAXSEQUENCE];
 int natoms, nresidues;    /* The number of atoms and residues in the structure */
 Float Rg;   /* radius of gyration */
-Float sc_rms, native_rms, rms_Emin, rms_RMSDmin;
+Float sc_rms, native_rms, new_rms, rms_Emin, rms_RMSDmin;
 int backbone_accepted;
 int first_atom_res;
 int *helix;
@@ -188,6 +198,7 @@ unsigned char MATRIX_SIZE, HALF_MATRIX_SIZE;
 short  READ_POTENTIAL, READ_DENSITY, USE_GO_POTENTIAL;
 char PROTEIN_NAME[100];
 
+Float rmsd_constraint;
 
 Float dE_tor, prev_E_tor, E_tor;
 Float dE_sct, prev_E_sct, E_sct;
@@ -285,7 +296,6 @@ float  *buf_in, *buf_out;
 #include "align.h"
 #include "hbonds.h"
 #include "update.h"
-#include "getrms.h"
 #include "move.h"
 #include "mu_potential.h"
 #include "fold.h"

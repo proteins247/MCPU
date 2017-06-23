@@ -38,11 +38,10 @@ void Fold(void) {
   float E_hbond_now = 0.0;
 
   /* rmsd by jyang */
-  /* 
-   * A struct backbone five struct vector named N, CA, C, CB, O 
-   * A struct vector contains floats x, y, z
-   */
-  struct backbone struct_f1[MAXSEQUENCE], struct_f2[MAXSEQUENCE];
+
+  /* the following two moved to backbone.h */
+  /* struct backbone struct_f1[MAXSEQUENCE], struct_f2[MAXSEQUENCE]; */
+
   /* 
    * struct alignment contains int NFRAG as well as two arrays of
    * struct fragments of size MAXFRAG (=30).  
@@ -63,7 +62,7 @@ void Fold(void) {
     CopyAtom(native[i], &orig_native[i]);
 
   CenterProtein(&native, natoms);  
-  SetupMatrixStuff();  
+  SetupMatrixStuff();
 
   Contacts();  
   fprintf(STATUS, "INITIAL CLASHES\t%d\n", nclashes); 
@@ -74,16 +73,21 @@ void Fold(void) {
   fprintf(STATUS, "\n");
 
   /* setup initial energies */
+
   //align_drms(native, native_residue, struct_native, struct_residue, map_to_seq, map_to_struct, nalign, &native_rms);
-  for (i=0; i<nalign; ++i)
-   {
+
+  /* 
+   * native (struct_f2) is the structure under MC simulation
+   * struct_native (struct_f1) is the reference structure for RMSD
+   */
+  for (i=0; i<nalign; ++i) {
     struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x;
     struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y;
     struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z;
     struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
     struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
     struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
-   }
+  }
   native_rms = getrms(struct_f1, struct_f2, align);
 
   ResetEnergies(0);
@@ -98,11 +102,10 @@ void Fold(void) {
   Emin_aro = prev_E_aro;
   fprintf(STATUS, "ENERGY = %.2f(clashes) + %.2f(rmsd) + %.2f(potential) + %.2f(Aro) + %.2f(hbond) + %.2f(tor) + %.2f(sct)\n\n",
     weight_clash, weight_rms, weight_potential, ARO_WEIGHT, weight_hbond, TOR_WEIGHT, SCT_WEIGHT);
-  for (i=0; i<natoms; i++)
-   {
+  for (i=0; i<natoms; i++) {
     prev_native[i] = native[i];
     native_Emin[i] = prev_native[i];
-   }
+  }
   for (i=0; i < nresidues; ++i)
     cur_rotamers[i] = 0;
 
@@ -115,17 +118,18 @@ void Fold(void) {
 
   /* main folding loop */
 
-  for (mcstep = 0; mcstep<MC_STEPS; mcstep++) {
+  for (mcstep=0; mcstep<MC_STEPS; mcstep++) {
 
     /* replica exchange */
     if (mcstep % MC_REPLICA_STEPS == 0) {
 
-        for (i=0; i<nprocs; i++) replica_index[i] = i;
+        for (i=0; i<nprocs; i++)
+          replica_index[i] = i;
         ierr = MPI_Allgather(&E, 1, MPI_FLOAT, Enode, 1, MPI_FLOAT, mpi_world_comm);
 
         if (myrank == 0) {
-          for (irep=0; irep<MAX_EXCHANGE; irep++){
-            sel_num= (int) (threefryrand()*(nprocs-2));
+          for (irep=0; irep<MAX_EXCHANGE; irep++) {
+            sel_num = (int) (threefryrand()*(nprocs-2));
 
             //fprintf(STATUS, "irep : %d, sel_num : %d\n", irep, sel_num);
             //fflush(STATUS);
@@ -133,7 +137,7 @@ void Fold(void) {
             delta_E = Enode[sel_num+1]-Enode[sel_num];
             delta_T = 1.0/Tnode[sel_num+1]-1.0/Tnode[sel_num];
             delta_all = delta_E * delta_T;
-            if (delta_all >= 0 || threefryrand() < expf(delta_all)){
+            if (delta_all >= 0 || threefryrand() < expf(delta_all)) {
               itmp = replica_index[sel_num];
               replica_index[sel_num] = replica_index[sel_num+1];
               replica_index[sel_num+1] = itmp;
@@ -141,7 +145,8 @@ void Fold(void) {
               Enode[sel_num] = Enode[sel_num+1];
               Enode[sel_num+1] = etmp;
               accepted_replica[sel_num]++;
-            } else {
+            }
+            else {
               rejected_replica[sel_num]++;
             }
           }
@@ -202,12 +207,13 @@ void Fold(void) {
       GetChi();
     } /* END: replica exchange */
 
-    /* Note backbone_accepted is altered by MakeMove, should be 0 initially */
+    /* if backbone move was made and accepted we update native_rms */
     if (backbone_accepted == 1) {
       for (i=0; i<nalign; ++i) {
-        struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x;
-        struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y;
-        struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z;
+        /* commented out because struct_native doesn't get altered */
+        /* struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x; */
+        /* struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y; */
+        /* struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z; */
         struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
         struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
         struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
@@ -219,15 +225,15 @@ void Fold(void) {
     if (mcstep % MC_PRINT_STEPS == 0) {
       //align_drms(native, native_residue, struct_native, struct_residue, map_to_seq, map_to_struct, nalign, &native_rms);
       /* rmsd by jyang */
-      for (i=0; i<nalign; ++i)
-       {
-        struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x;
-        struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y;
-        struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z;
+      for (i=0; i<nalign; ++i) {
+        /* commented out because struct_native doesn't get altered */
+        /* struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x; */
+        /* struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y; */
+        /* struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z; */
         struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
         struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
         struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
-       }
+      }
       native_rms = getrms(struct_f1, struct_f2, align);
       TypeContacts();
       E_pot_now = FullAtomEnergy();
@@ -237,7 +243,7 @@ void Fold(void) {
       E_hbond_now = HydrogenBonds();
       fprintf(STATUS, "STEP %10ld  %8.2f %6d %5.2f %9.2f %9.2f %9.2f    %6.2f %8.2f %6.2f %6.2f %6.2f %6.3f\n", 
 	  mcstep, E, ncontacts, native_rms, E_pot_now, E_sct_now, E_hbond_now, E_aro_now, E_tor_now, 
-	  100*(Float)naccepted/(Float)MC_PRINT_STEPS, 100*(Float)nrejected/(Float)MC_PRINT_STEPS, 100*(Float)nothers/(Float)MC_PRINT_STEPS, MC_TEMP); 
+	  100*(Float)naccepted/(Float)MC_PRINT_STEPS, 100*(Float)nrejected/(Float)MC_PRINT_STEPS, 100*(Float)nothers/(Float)MC_PRINT_STEPS, MC_TEMP);
       fflush(STATUS);
       n_sidechain_accepted = 0;
       naccepted = 0;

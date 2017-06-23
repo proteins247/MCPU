@@ -20,8 +20,6 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
 //  float hb_after_move = 0.;
 //  int j;
 //  float e;
-  /*rmsd by jyang*/
-  struct backbone struct_f2[MAXSEQUENCE];
   struct alignment align;
 
   NFRAG = 1;
@@ -32,7 +30,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
   backbone_accepted = 0;
 
   do {                          /* while (sidechain_step++ < SIDECHAIN_MOVES)
-                                 * if SIDECHAIN_MOVES is 1, the loop execs twice.
+                                 * i.e. SIDECHAIN_MOVES is 1, the loop execs twice.
                                  */
 
     reject = 0;
@@ -72,7 +70,24 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
           use_yang = 0;
         }
       }
-    } else {                    /* sidechain_step != 0 */
+      /* VZ
+       * struct_f2, the structure backbone, is updated here
+       * because a backbone move was attempted.
+       * Acts only if rmsd_constraint is active
+       * Note: struct_f1 and struct_f2 are declared in backbone.h,
+       *   and struct_f1 is set in fold.h
+       */
+      if (rmsd_constraint > 0) {
+        for (i=0; i<nalign; ++i) {
+          struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
+          struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
+          struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
+        }
+        new_rms = getrms(struct_f1, struct_f2, align);
+      }
+    }
+    /* make sidechain move (sidechain_step != 0) */
+    else {                    
       if (total_ntorsions != 0) {
         //fprintf(STATUS, "SidechainMove():\n");
         SidechainMove();
@@ -90,12 +105,19 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
       if (sidechain_step == 0)
         nothers++;
     }
+    /* below block is new code to support RMSD constraint */
+    else if ((sidechain_step == 0) && (rmsd_constraint > 0)) {
+      if (new_rms > rmsd_constraint) {
+        reject = 1;
+        nrejected++;
+      }
+    }
     else {
 
       delta_nclashes = 0;
       if (mc_flags.init)  
 	for (i=0; i<total_pairs2; i++) 
-	  delta_nclashes += data[cd[i].a][cd[i].b].delta_clashes-data[cd[i].a][cd[i].b].clashes;
+	  delta_nclashes += data[cd[i].a][cd[i].b].delta_clashes - data[cd[i].a][cd[i].b].clashes;
 
       dE = 0; dE_pot = 0; dE_hbond = 0; dE_tor = 0; dE_aro = 0; dE_sct = 0;
 
@@ -118,13 +140,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
 	  dE_hbond = FoldHydrogenBonds() - prev_E_hbond;
       }
 
-      if ((weight_rms != 0.0) && (sidechain_step == 0)) {
-        for (i=0;i<nalign;++i) {
-	  struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
-          struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
-          struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
-        }
-      }
+      /* here, code used to test for rmsd */
 //	align_drms(native, native_residue, struct_native, struct_residue, map_to_seq, map_to_struct, nalign, &bb_rms);
       dE = weight_potential*dE_pot + weight_clash*delta_nclashes + weight_hbond*dE_hbond + TOR_WEIGHT*dE_tor + ARO_WEIGHT*dE_aro + SCT_WEIGHT*dE_sct;
       
@@ -136,10 +152,12 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
         if ((nomove == 0) && (sidechain_step == 0)) {
 	  naccepted++;
 	  backbone_accepted = 1;
-        } else 
+        }
+        else 
 	  n_sidechain_accepted++;
 //    fprintf(STATUS, "%7.3f %7.3f %7.3f %7.3f %7.3f %7.3f %7.3f\n", E, 0.2*E_pot+0.8*E_hbond, E_pot, E_hbond, dE, dE_pot, dE_hbond);
-      } else {
+      }
+      else {
 	reject = 1;
         if ((nomove==0) && (sidechain_step == 0))
 	  nrejected++;
@@ -170,32 +188,31 @@ void LocalBackboneMove(Float step_size) {
 
   mc.loop_size = 1;
   all_rotated_natoms = 0;
-  total_pairs=total_pairs2=0;
-  total_hbond_pairs=0;
+  total_pairs = total_pairs2 = 0;
+  total_hbond_pairs = 0;
   nomove = 0;
 
   mc.sel_res_num = (int)(threefryrand()*nresidues);
-  if(is_template[mc.sel_res_num]==1)
-   {
+  if(is_template[mc.sel_res_num]==1) {
     nomove = 1;
     nothers++;
     return;
-   }
+  }
   if (native_residue[mc.sel_res_num].amino_num==14) { /* cannot rotate around proline phi */
     if (mc.sel_res_num != nresidues-1) 
       mc.is_phi = 0; 
-    else /* if proline is last residue, no rotation possible */
-     {
+    else { /* if proline is last residue, no rotation possible */
       nomove = 1;
       nothers++;
       return;
-     }
+    }
   }
   else if (mc.sel_res_num == 0)
     mc.is_phi = 0;
   else if (mc.sel_res_num == nresidues-1)
     mc.is_phi = 1;
-  else    mc.is_phi = (int) (threefryrand()*2);
+  else
+    mc.is_phi = (int) (threefryrand()*2);
   //fprintf(STATUS, "mainchain move at %5d\n", mc.sel_res_num);
 
   step_size = step_size*GaussianNum();;
@@ -203,7 +220,7 @@ void LocalBackboneMove(Float step_size) {
   BackboneMove(step_size);
   UpdateLattice(rotate_natoms[mc.is_phi][mc.sel_res_num], rotate_atom[mc.is_phi][mc.sel_res_num]);
 
-  for (i=0;i<rotate_natoms[mc.is_phi][mc.sel_res_num];i++){
+  for (i=0;i<rotate_natoms[mc.is_phi][mc.sel_res_num];i++) {
     is_rotated[rotate_atom[mc.is_phi][mc.sel_res_num][i]]=1;
   }
 
@@ -292,11 +309,10 @@ void LoopBackboneMove(Float absolute_step_size) {
   if (mc.selected[i] > nresidues/2.0) {
       if (mc.selected[i] != 0 && mc.selected[i] != (nresidues-1) && native_residue[mc.selected[i]].amino_num!=14) {
 	/* can't rotate around a proline phi */
-        if (use_cluster > threefryrand())
-         {
+        if (use_cluster > threefryrand()) {
           step_phi = desire_phi - cur_phi[mc.selected[i]-1];
           step_phi += GaussianNum()*CLUSTER_NOISE;
-         }
+        }
         else
           step_phi = GaussianNum()*CLUSTER_NOISE;
 	step_phi *= deg2rad;
@@ -441,20 +457,18 @@ void MakeSidechainMove() {
   float cummul_prob;
 
   mc.sel_rotamer = (int) (threefryrand()*native_residue[mc.sel_res_num].nrotamers);
-  if (USE_ROT_PROB == 1)
-   {
+  if (USE_ROT_PROB == 1) {
     p_0to1 = threefryrand()*100;
     cummul_prob = 0.;
-    for (i=0; i<no_chi_list[native_residue[mc.sel_res_num].amino_num]; i++)
-     {
+    for (i=0; i<no_chi_list[native_residue[mc.sel_res_num].amino_num]; i++) {
       cummul_prob += prob_ang[native_residue[mc.sel_res_num].amino_num][i]; 
       if (cummul_prob > p_0to1)
 	break;
-     }
+    }
     sel_no_chi = i;
-   }
+  }
   else
-   sel_no_chi = (int) (threefryrand()*no_chi_list[native_residue[mc.sel_res_num].amino_num]);
+    sel_no_chi = (int) (threefryrand()*no_chi_list[native_residue[mc.sel_res_num].amino_num]);
   //fprintf(STATUS, "sidechain move at %5d\n", mc.sel_res_num);
   
   old_rotamer = cur_rotamers[mc.sel_res_num];
@@ -479,7 +493,7 @@ void MakeSidechainMove() {
     native_residue[mc.sel_res_num].tmpchi[i] = native_residue[mc.sel_res_num].chi[i] + mc.delta_angle[i];
     
     DoRotation(a, b, c, d, mc.delta_angle[i], rotate_sidechain_natoms[mc.sel_res_num][i], rotate_sidechain_atom[mc.sel_res_num][i]);
-    for (j=0;j<rotate_sidechain_natoms[mc.sel_res_num][i];j++){
+    for (j=0;j<rotate_sidechain_natoms[mc.sel_res_num][i];j++) {
       is_rotated[rotate_sidechain_atom[mc.sel_res_num][i][j]]=i+1;
     }
   }
@@ -493,8 +507,8 @@ void MakeSidechainMove() {
 void SidechainMove() {
 
   all_rotated_natoms = 0;
-  total_pairs=total_pairs2=0;  
-  total_hbond_pairs=0;
+  total_pairs = total_pairs2 = 0;
+  total_hbond_pairs = 0;
 
   do {
     mc.sel_res_num = (int) (threefryrand()*nresidues);

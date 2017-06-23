@@ -98,10 +98,10 @@ output_directory=$(readlink -f ${output_directory})
 
 # --------------------------------------------------
 # Modules
-source new-modules.sh
-module purge
-module load gcc/6.3.0-fasrc01
-module load openmpi/2.1.0-fasrc01
+# source new-modules.sh
+# module purge
+# module load gcc/6.3.0-fasrc01
+# module load openmpi/2.1.0-fasrc01
 
 # Begin --------------------------------------------------
 

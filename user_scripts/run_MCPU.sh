@@ -44,11 +44,8 @@ THREE_TO_ONE=${MCPU_PATH}/user_scripts/three_to_one.sed
 
 # below script assumes no spaces or other weirdness in MCPU_PATH
 MCPU_CFG_TEMPLATE=${MCPU_PATH}/src_mpi/TEMPLATE.cfg
-MCPU_BACKBONE_TEMPLATE=${MCPU_PATH}/src_mpi/backbone.TEMPLATE.c
-# within MCPU, files src_mpi/cfg, src_mpi/backbone.c have been edited
+# within MCPU, files src_mpi/TEMPLATE.cfg has been edited
 #  to accomodate this script.
-# backbone.h char* variables for filenames have been lengthened to 500
-# init.h reading cfg file can accomodate 500 chars/line as opposed to 150
 
 : ${PARTITION:=shakhnovich}     # this parameter can be changed by running 
                                 #   this script like this:
@@ -176,22 +173,9 @@ for ((i=0; i<$NRUNS; i++)); do
 	> $MCPU_PATH/src_mpi/cfg
     echo "Created protein-specific $MCPU_PATH/src_mpi/cfg"
 
-    # sed \
-    #     -e "s:VAR_OUTPUT:${subdirectory}/${fileroot}:" \
-    #     < $MCPU_BACKBONE_TEMPLATE \
-    #     > $MCPU_PATH/src_mpi/backbone.c
-    # echo "Created protein specific $MCPU_PATH/src_mpi/backbone.c"
-
     rm -fv "${subdirectory}/nothing.template"
     touch "${subdirectory}/nothing.template"
     echo "Created ${subdirectory}/nothing.template"
-
-    # old way:
-    # # now compile and run
-    # echo "Compile"
-    # echo "change directory: $MCPU_PATH/src_mpi"; cd $MCPU_PATH/src_mpi
-    # mpicc -O3 -o ${subdirectory}/fold_potential_mpi backbone.c -lm
-    # cp -v cfg ${subdirectory}
 
     # new way, no compilation, copy program and run
     cp -v $MCPU_PATH/src_mpi/cfg ${subdirectory}

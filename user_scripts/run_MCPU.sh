@@ -107,14 +107,6 @@ module load openmpi/2.1.0-fasrc01
 
 # Begin --------------------------------------------------
 
-# preprocess pdb
-# this modifies PDB file in place!!!!!!!!!!!!!
-if [ $(grep ATOM < "${input_protein}" | awk '{print $5}' | wc -L) -gt 1 ]; then
-   echo "suspecting that protein chain identifier is missing."
-   echo "running add_chain_name.py to add it"
-   /n/home00/vzhao/opt/MCPU/user_scripts/add_chain_name.py "${input_protein}"
-fi
-
 # generate required files
 # FASTA sequence from PDB
 echo ">${fileroot}" > "${input_prefix}.fasta"

@@ -79,11 +79,13 @@ output_directory=$2
 if [ $# -lt 2 ]; then
     echo "not enough inputs, exiting"
     echo "required: input_protein output_directory"
+    echo "$HELP"
     exit 10
 fi
 
 if [ ! -f "${input_protein}" ]; then
     echo "Input protein does not exist, exiting"
+    echo "$HELP"
     exit 10
 fi
 
@@ -98,10 +100,10 @@ output_directory=$(readlink -f ${output_directory})
 
 # --------------------------------------------------
 # Modules
-# source new-modules.sh
-# module purge
-# module load gcc/6.3.0-fasrc01
-# module load openmpi/2.1.0-fasrc01
+source new-modules.sh
+module purge
+module load gcc/6.3.0-fasrc01
+module load openmpi/2.1.0-fasrc01
 
 # Begin --------------------------------------------------
 
@@ -117,7 +119,7 @@ fi
 # FASTA sequence from PDB
 echo ">${fileroot}" > "${input_prefix}.fasta"
 grep ATOM < "${input_protein}" \
-    | awk '{print $4,$6}' \
+    | cut -c18-20,23-26 \
     | uniq \
     | awk '{print $1}' \
     | sed -f ${THREE_TO_ONE} \

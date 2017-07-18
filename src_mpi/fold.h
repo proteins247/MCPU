@@ -211,9 +211,9 @@ void Fold(void) {
     if (backbone_accepted == 1) {
       for (i=0; i<nalign; ++i) {
         /* commented out because struct_native doesn't get altered */
-        /* struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x; */
-        /* struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y; */
-        /* struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z; */
+        struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x;
+        struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y;
+        struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z;
         struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
         struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
         struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;
@@ -227,9 +227,9 @@ void Fold(void) {
       /* rmsd by jyang */
       for (i=0; i<nalign; ++i) {
         /* commented out because struct_native doesn't get altered */
-        /* struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x; */
-        /* struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y; */
-        /* struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z; */
+        struct_f1[i+1].CA.x = struct_native[struct_residue[map_to_struct[i]].CA].xyz.x;
+        struct_f1[i+1].CA.y = struct_native[struct_residue[map_to_struct[i]].CA].xyz.y;
+        struct_f1[i+1].CA.z = struct_native[struct_residue[map_to_struct[i]].CA].xyz.z;
         struct_f2[i+1].CA.x = native[native_residue[map_to_seq[i]].CA].xyz.x;
         struct_f2[i+1].CA.y = native[native_residue[map_to_seq[i]].CA].xyz.y;
         struct_f2[i+1].CA.z = native[native_residue[map_to_seq[i]].CA].xyz.z;

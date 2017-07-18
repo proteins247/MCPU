@@ -121,7 +121,7 @@ void Restore() {
 
   //fprintf(stdout, "Restore(): mc.sel_res_num %d, sidechain_step %1d, sidemovedone %1d\n", mc.sel_res_num, sidechain_step, sidemovedone);
 
-  if ((sidechain_step!=0)&&(sidemovedone!=0))
+  if ((sidechain_step != 0) && (sidemovedone != 0))
     for (i=0; i<native_residue[mc.sel_res_num].ntorsions; i++)
       native_residue[mc.sel_res_num].tmpchi[i] -= mc.delta_angle[i];
 
@@ -139,8 +139,8 @@ void Restore() {
   for (i=0; i<total_pairs; i++) {
     M = ab[i].a;
     N = ab[i].b;
-    data[M][N].delta_contacts=0;
-    data[M][N].delta_clashes=0;
+    data[M][N].delta_contacts = 0;
+    data[M][N].delta_clashes = 0;
   }
   
   if (mc_flags.init) {
@@ -155,8 +155,8 @@ void Restore() {
     for (i=0; i<total_hbond_pairs; i++){ 
       M = hbond_pair[i].a;
       N = hbond_pair[i].b;
-      data[M][N].delta_hbond=data[N][M].delta_hbond=NO_HBOND;
-      data[M][N].delta_closehb=data[N][M].delta_closehb=3;
+      data[M][N].delta_hbond = data[N][M].delta_hbond = NO_HBOND;
+      data[M][N].delta_closehb = data[N][M].delta_closehb = 3;
     }
   }
 

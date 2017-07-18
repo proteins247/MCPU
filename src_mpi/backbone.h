@@ -111,11 +111,11 @@ short debug_nclashes;
 struct atom *native, *prev_native, *orig_native, *native_Emin, *native_RMSDmin;
 struct residue *native_residue;
 /* VZ:
- * The following two used to be defined in fold.h, and struct_f2 again in move.h
+ * The following two used to be local vars in fold.h, and struct_f2 also local to move.h
  * struct_f1 holds reference structure backbone.
  * I've moved them to here because I'd like the functions in move.h to access them
- * Yes even more global namespace pollution!
- * A struct backbone has five struct vector named N, CA, C, CB, O 
+ * Yes even more global namespace pollution unfortunately.
+ * A struct backbone holds five struct vector's named N, CA, C, CB, O 
  * MAXSEQUENCE is macro for 350
  */
 struct backbone struct_f1[MAXSEQUENCE], struct_f2[MAXSEQUENCE];

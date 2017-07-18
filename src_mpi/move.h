@@ -30,7 +30,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
   backbone_accepted = 0;
 
   do {                          /* while (sidechain_step++ < SIDECHAIN_MOVES)
-                                 * i.e. SIDECHAIN_MOVES is 1, the loop execs twice.
+                                 * i.e. with SIDECHAIN_MOVES = 1, the loop execs twice.
                                  */
 
     reject = 0;
@@ -52,24 +52,17 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
         use_yang = 0;
       }
       else {
-        if (YANG_MOVE) {
-  	  if (threefryrand() < YANG_MOVE) {
-            //fprintf(STATUS, "integloop():\n");
+        if (YANG_MOVE && threefryrand() < YANG_MOVE) {
 	    integloop(step_size, &n_soln);
 	    use_yang = 1;
-          }
-	  else {
+        }
+        else {
             //fprintf(STATUS, "LocalBackboneMove():\n");
 	    LocalBackboneMove(step_size);
 	    use_yang = 0;
-          }
         }
-        else {
-          //fprintf(STATUS, "LocalBackboneMove():\n");
-          LocalBackboneMove(step_size);
-          use_yang = 0;
-        }
-      }
+      } /* end (sidechain_step != 0) */
+
       /* VZ
        * struct_f2, the structure backbone, is updated here
        * because a backbone move was attempted.
@@ -86,8 +79,7 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
         new_rms = getrms(struct_f1, struct_f2, align);
       }
     }
-    /* make sidechain move (sidechain_step != 0) */
-    else {                    
+    else {    /* make sidechain move (sidechain_step != 0) */
       if (total_ntorsions != 0) {
         //fprintf(STATUS, "SidechainMove():\n");
         SidechainMove();
@@ -105,12 +97,13 @@ void MakeMove(Float step_size, Float use_global_bb_moves) {
       if (sidechain_step == 0)
         nothers++;
     }
-    /* below block is new code to support RMSD constraint */
-    else if ((sidechain_step == 0) && (rmsd_constraint > 0)) {
-      if (new_rms > rmsd_constraint) {
-        reject = 1;
-        nrejected++;
-      }
+    /* below block is new code to support RMSD constraint
+     * commenting this block fixes bug.
+     * --> has to be something messing with logic?
+     */
+    else if ((sidechain_step == 0) && (rmsd_constraint > 0) && (new_rms > rmsd_constraint)) {
+      reject = 1;
+      nrejected++;
     }
     else {
 

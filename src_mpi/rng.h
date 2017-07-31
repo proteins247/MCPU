@@ -14,14 +14,14 @@
  *
  * I'm unsure about the behavior of these functions in a
  * multi-threaded situation where there is only one instance of these
- * variables.
+ * variables. Need to learn about thread_local (C11)
  *
  */
 static threefry4x64_ctr_t ctr = {{}};
 static threefry4x64_key_t key = {{}};
 
 void increment_counter() {
-    static size_t index = 0;
+    static unsigned char index = 0;
     if (index == 4) {
         index = 0;
     }
@@ -36,7 +36,7 @@ void set_threefry_array(unsigned long int user_key) {
 }
 
 double threefryrand() {
-    static size_t randomNumberIndex = 4;
+    static unsigned char randomNumberIndex = 4;
     static threefry4x64_ctr_t result = {{}};
     if (randomNumberIndex == 4) {
         result = threefry4x64(ctr, key);

@@ -58,7 +58,7 @@ Alternatively, consider adapting `run_MCPH.sh` for your computing infrastructure
 The follow contains information for setting up MCPU simulations.
 
 ### 1. Create necessary input files:
-A minimized PDB file is necessary for MCPU. First, some energy files must be generated. Note that `<PDB_ID>` should be substituted with the basename of your structure file (e.g. for `my_protein.pdb`, `<PDB_ID>` is `my_protein`.
+A minimized PDB file is necessary for MCPU; the file should not contain hydrogen atoms. From this file, some energy files must be generated. Note that `<PDB_ID>` should be substituted with the basename of your structure file (e.g. for `my_protein.pdb`, `<PDB_ID>` is `my_protein`.
 
 Necessary energy files:
 
@@ -103,6 +103,7 @@ A configuration file named `cfg` must be created. `src_mpi` contains a `TEMPLATE
 
 ### 3. Change parameters in define.h if necessary
 Contains weights for different energy terms (see publications [1], [3]): 
+
 - POTNTL_WEIGHT -- contact potential
 - HBOND_WEIGHT -- hydrogen bonding
 - TOR_WEIGHT -- torsional energy for amino acid triplets

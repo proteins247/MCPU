@@ -23,15 +23,17 @@ In `src_mpi`, compile `backbone.c`:
 	mpicc -O3 -o fold_potential_mpi backbone.c -lm rng.o
 	# or call ./compile
 
-### Run simulation
+### Run simulation: Harvard Odyssey
 
-A minimized PDB file is necessary for MCPU simulations. See "Ingredients for Running MCPU."
-
-### Harvard Odyssey
-
-If you are running on Harvard Odyssey, `run_MCPU.sh` (in `user_scripts`) can streamline things. See `./run_MCPU.sh -h` for information.
+If you are running on Harvard Odyssey, `run_MCPU.sh` (in `user_scripts`) streamlines the process; all you need to provide is a minimized structure (PDB) file. See `./run_MCPU.sh -h` for information.
 
 `user_scripts` contains other scripts to aid in preparing minimized PDB files.
+
+### Run simulation
+
+If not running on Harvard Odyssey, it is necessary to read further to understand what components need to be prepared. See "Ingredients for Running MCPU."
+
+Alternatively, consider adapting `run_MCPH.sh` for your computing infrastructure.
 
 ## Ingredients for running MCPU
 The follow contains information for setting up MCPU simulations.
@@ -61,23 +63,23 @@ It should be sufficient to set every reside to coil-type.
 ### 2. Edit path and configuration options. 
 A configuration file named `cfg` must be created. `src_mpi` contains a `TEMPLATE.cfg` file to be used with `run_MCPU.sh`, a script that streamlines MCPU preparation for Harvard Odyssey users. If you are not on Harvard Odyssey, it is still possible to take `TEMPLATE.cfg` and create your own `cfg` from it by editing all lines that contain `VAR`.
 
-- Edit configuration options in cfg. The most relevant options (without changing the potential) are:
-	- NATIVE_FILE and STRUCTURE_FILE -- input PDB file for unfolding simulations (folded structure, single chain, no hydrogens)
+- Edit configuration options in `cfg`. The most relevant options (without changing the potential) are:
+	- NATIVE_FILE and STRUCTURE_FILE -- path to PDB file for unfolding simulations (folded structure, single chain, no hydrogens)
 	- TEMPLATE_FILE, TRIPLET_ENERGY_FILE, SIDECHAIN_TORSION_FILE, SECONDARY_STRUCTURE_FILE 
 		- direct these to the correct input file in the sim folder. 
-		- TEMPLATE_FILE is a required blank file, nothing.template.
-		- TRIPLET_ENERGY_FILE is <PDB_ID>.triple (see step 1)
-		- SIDECHAIN_TORSION_FILE is <PDB_ID>.sctorsion
-		- SECONDARY_STRUCTURE_FILE is <PDB_ID>.sec_str
+		- TEMPLATE_FILE is a required blank file, `nothing.template`.
+		- TRIPLET_ENERGY_FILE is `<PDB_ID>.triple` (see step 1)
+		- SIDECHAIN_TORSION_FILE is `<PDB_ID>.sctorsion`
+		- SECONDARY_STRUCTURE_FILE is `<PDB_ID>.sec_str`
 	- MC_STEPS -- length of the simulation
 	- MC_PDB_PRINT_STEPS -- frequency of outputting coordinates to a pdb file
 	- MC_PRINT_STEPS -- frequency of outputting energies to log file
 	- MC_REPLICA_STEPS -- frequency of replica exchange. 
 		- For MCPU simulations (ref. [2]), set to a value greater than MC_STEPS (no replica exchange).
 - Edit temperature range if necessary 
-	- Set minimum temperature: backbone.c, line 14. 
+	- Set minimum temperature: edit `backbone.c` line 14 and recompile.
 	- Currently set so that each processor runs a simulation at a temperature 0.1 units higher than the previous.
-	- To use a different temperature range, change both backbone.c (line 27) and init.h (function SetProgramOptions, line 52). 
+	- To use a different temperature range, change both `backbone.c` (line 27) and `init.h` (function SetProgramOptions, line 52). 
 
 
 ### 3. Change parameters in define.h if necessary

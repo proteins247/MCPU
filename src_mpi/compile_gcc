@@ -1,2 +1,0 @@
-gcc34 -g -O2 -o ../fold_potential_gcc backbone.c -lm -Wall -static
-

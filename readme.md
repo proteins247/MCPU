@@ -1,5 +1,24 @@
 # MCPU - Monte Carlo protein simulation program
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [MCPU - Monte Carlo protein simulation program](#mcpu---monte-carlo-protein-simulation-program)
+    - [Directory structure](#directory-structure)
+    - [Quickstart](#quickstart)
+        - [Compilation](#compilation)
+        - [Run simulation: Harvard Odyssey](#run-simulation-harvard-odyssey)
+        - [Run simulation](#run-simulation)
+    - [Ingredients for running MCPU](#ingredients-for-running-mcpu)
+        - [1. Create necessary input files:](#1-create-necessary-input-files)
+        - [2. Edit path and configuration options.](#2-edit-path-and-configuration-options)
+        - [3. Change parameters in define.h if necessary](#3-change-parameters-in-defineh-if-necessary)
+        - [4. Compile and run](#4-compile-and-run)
+    - [Data analysis](#data-analysis)
+
+<!-- markdown-toc end -->
+
+
 ## Directory structure
 - `mcpu_prep` - contains code to create input files
 - `sim` - example directory with files prepared for simulations

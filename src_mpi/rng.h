@@ -12,37 +12,18 @@
  * be different for each process if one seeks to avoid having
  * the same stream of random numbers for each thread/process.
  *
- * I'm unsure about the behavior of these functions in a
- * multi-threaded situation where there is only one instance of these
- * variables. Need to learn about thread_local (C11)
- *
  */
-static threefry4x64_ctr_t ctr = {{}};
-static threefry4x64_key_t key = {{}};
+#ifndef RNG_H_
+#define RNG_H_
 
-void increment_counter() {
-    static unsigned char index = 0;
-    if (index == 4) {
-        index = 0;
-    }
-    ctr.v[index++]++;
-}
+/* Sets RNG seed */
+void set_threefry_array(uint64_t user_key);
 
-void set_threefry_array(unsigned long int user_key) {
-    key.v[0] = user_key;
-    key.v[1] = user_key;
-    key.v[2] = user_key;
-    key.v[3] = user_key;
-}
+/* Return double in range [0., 1.) */
+double threefryrand();
 
-double threefryrand() {
-    static unsigned char randomNumberIndex = 4;
-    static threefry4x64_ctr_t result = {{}};
-    if (randomNumberIndex == 4) {
-        result = threefry4x64(ctr, key);
-        randomNumberIndex = 0;
-        increment_counter();
-    }
-    return u01fixedpt_closed_open_64_53(result.v[randomNumberIndex++]);
-}
+/* Return random unsigned integer of 64 bits */
+uint64_t threefryrand_int();
 
+
+#endif /* RNG_H_ */

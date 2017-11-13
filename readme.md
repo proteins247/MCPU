@@ -1,17 +1,20 @@
-# MCPU - Monte-Carlo protein simulation program
+# MCPU - Monte Carlo protein simulation program
 
 ## Directory structure
-- =mcpu_prep= - the directory containing the code to create input files
-- =sim= - example directory with files prepared for simulations
-- =src_mpi= - the directory with source code
-- =config_files= - the directory with parameters
+- `mcpu_prep` - contains code to create input files
+- `sim` - example directory with files prepared for simulations
+- `src_mpi` - contains source code
+- `config_files` - contains parameters
+- `user_scripts` - contains scripts to setup MCPU simulations
 
+## Ingredients for running MCPU
+### test
 
-## 1. Create necessary input files:
-	- =<PDB_ID>.triple=
-	- =<PDB_ID>.sctorsion=
-	- =<PDB_ID>.sec_str=
-To create the first two files, run =save_triple= (in the mcpu_prep directory): 
+### 1. Create necessary input files:
+	- `<PDB_ID>.triple`
+	- `<PDB_ID>.sctorsion`
+	- `<PDB_ID>.sec_str`
+To create the first two files, run `save_triple` (in the mcpu_prep directory): 
 	./save_triple <PDB_ID>
 with triple.energy, sct.energy, and <PDB_ID>.fasta in the directory.
 
@@ -23,7 +26,7 @@ Place input files, along with the pdb file, in the directory sim/DHFR/files/
 (currently contains sample input files for DHFR)
 
 
-## 2. Edit path and configuration options. 
+### 2. Edit path and configuration options. 
 - Change all instances of /PATHNAME/ to directory containing the MCPU folder, in configuration file /src_mpi/cfg and in src_mpi/backbone.c.
 	Set output directory (PDB_OUT_FILE in cfg and line 9 in backbone.c, in the form /directory/file-prefix)
 - Edit configuration options in cfg. The most relevant options (without changing the potential) are:
@@ -45,7 +48,7 @@ Place input files, along with the pdb file, in the directory sim/DHFR/files/
 	To use a different temperature range, change both backbone.c (line 27) and init.h (function SetProgramOptions, line 52). 
 
 
-## 3. Change parameters in define.h if necessary
+### 3. Change parameters in define.h if necessary
 Contains weights for different energy terms (see publications [1], [3]): 
 POTNTL_WEIGHT -- contact potential
 HBOND_WEIGHT -- hydrogen bonding
@@ -54,7 +57,7 @@ SCT_WEIGHT -- side chain torsional energy
 ARO_WEIGHT -- relative orientations of aromatic residues
 
 
-## 4. Compile and run
+### 4. Compile and run
 The command for code compiling (within src_mpi directory):
 mpicc -O3 -o fold_potential_mpi backbone.c -lm
 To run:
@@ -62,7 +65,7 @@ mpiexec -n <# of procs> ./fold_potential_mpi cfg
 	where each processor runs a simulation at a different temperature (32 temperatures were used in ref. [2] for DHFR unfolding)
 
 
-## 5. Data analysis
+## Data analysis
 Output PDB file names look like: file-prefix_temperature.MCstep
 One log file is output for each simulation temperature: file-prefix_temperature.log
 Each log file contains:
@@ -71,7 +74,7 @@ which can be used to obtain simulated melting curves (see publication [2]).
 
 
 Publications:
-[1] J.S. Yang et al., Structure 15, 53 (2007)
-[2] J. Tian et al., PLOS Comp. Bio., in press
-[3] J. Xu, L. Huang, E. I. Shakhnovich, Proteins 79, 1704 (2011)
+1. J.S. Yang et al., Structure 15, 53 (2007)
+2. J. Tian et al., PLOS Comp. Bio., (2015)
+3. J. Xu, L. Huang, E. I. Shakhnovich, Proteins 79, 1704 (2011)
 

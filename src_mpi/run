@@ -1,1 +1,0 @@
-mpiexec -n 1 ./fold_potential_mpi cfg_replica_mpi

@@ -114,7 +114,8 @@ Contains weights for different energy terms (see publications [1], [3]):
 ### 4. Compile and run
 The command for code compiling (within src_mpi directory):
 
-    mpicc -O3 -o fold_potential_mpi backbone.c -lm
+	gcc -c rng.c
+    mpicc -O3 -o fold_potential_mpi backbone.c -lm rng.o
 
 To run:
 

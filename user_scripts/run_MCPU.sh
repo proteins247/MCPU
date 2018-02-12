@@ -107,7 +107,7 @@ module load openmpi/2.1.0-fasrc01
 
 # Begin --------------------------------------------------
 
-# generate required files
+# Generate required files
 # FASTA sequence from PDB
 echo ">${fileroot}" > "${input_prefix}.fasta"
 grep ATOM < "${input_protein}" \
@@ -121,7 +121,7 @@ grep ATOM < "${input_protein}" \
 echo >> "${input_prefix}.fasta"
 echo "Created ${input_prefix}.fasta"
 
-# generate .sec_str
+# Generate .sec_str
 n_residues=$(grep ATOM < "${input_protein}" \
 		    | awk '{print $4}' \
 		    | uniq \
@@ -132,7 +132,7 @@ echo $(head -c $n_residues < /dev/zero | tr '\0' 'C' ) \
      >> "${input_prefix}.sec_str"
 echo "Created ${input_prefix}.sec_str"
 
-# run save_triple (slowest part of this script)
+# Run save_triple (slowest part of this script)
 echo "Running save_triple"
 cp "${input_prefix}.fasta" ${MCPU_PATH}/mcpu_prep
 echo "change directory: ${MCPU_PATH}/mcpu_prep"; cd ${MCPU_PATH}/mcpu_prep
@@ -143,7 +143,7 @@ echo "Created ${input_prefix}.{triple,sctorsion}"
 echo "moving config files to output directory"
 cp -rv ${MCPU_PATH}/config_files "${output_directory}"
 
-# for each run
+# For each run
 for ((i=0; i<$NRUNS; i++)); do
     # make subdirectory
     subdirectory="${output_directory}/run_${i}"
@@ -171,7 +171,7 @@ for ((i=0; i<$NRUNS; i++)); do
     touch "${subdirectory}/nothing.template"
     echo "Created ${subdirectory}/nothing.template"
 
-    # new way, no compilation, copy program and run
+    # copy program and run
     cp -v $MCPU_PATH/src_mpi/cfg ${subdirectory}
     cp -v $MCPU_PATH/src_mpi/fold_potential_mpi ${subdirectory}
 
@@ -197,6 +197,5 @@ configured properly.
 3. Edit configuration files to taste
 4. I think some configuration settings have to be left at run time?
 5. define.h parameters probably are fine?
-6. Each time to run software needs separate compilation? # no longer
 
 NOTES

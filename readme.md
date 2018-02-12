@@ -38,7 +38,7 @@ In `mcpu_prep`, compile `save_triple.c`:
 In `src_mpi`, compile `backbone.c`:
 
     cd src_mpi
-	gcc -c rng.c
+	gcc -O3 -c rng.c
 	mpicc -O3 -o fold_potential_mpi backbone.c -lm rng.o
 	# or call ./compile
 
@@ -62,22 +62,22 @@ A minimized PDB file is necessary for MCPU; the file should not contain hydrogen
 
 Necessary energy files:
 
-	- `<PDB_ID>.triple`
-	- `<PDB_ID>.sctorsion`
-	- `<PDB_ID>.sec_str`
+	<PDB_ID>.triple
+	<PDB_ID>.sctorsion
+	<PDB_ID>.sec_str
 
-To create the first two files, run `save_triple` (found in the `mcpu_prep` directory): 
+To create the first two files, run `save_triple` (found in the `mcpu_prep` directory)...
 
 	./save_triple <PDB_ID>
 
-in a directory containing `triple.energy`, `sct.energy`, and `<PDB_ID>.fasta`.
+...in a directory containing `triple.energy`, `sct.energy`, and `<PDB_ID>.fasta` (this is just a file containing the FASTA sequence of your protein).
 
 Create `<PDB_ID>.sec_str` manually. File contains secondary structure assignment for each protein residue (see publication [1]).
 
-- first line: use input secondary structure? (9/0 = yes/no)
-- second line: secondary structure type (H/E/C = helix/sheet/coil)
+- First line: use input secondary structure? (9/0 = yes/no)
+- Second line: secondary structure type (H/E/C = helix/sheet/coil)
 
-It should be sufficient to set every reside to coil-type.
+In current usage, although the file is needed, filling the first line with as many ``0``s as there are residues is acceptable.
 
 ### 2. Edit path and configuration options. 
 A configuration file named `cfg` must be created. `src_mpi` contains a `TEMPLATE.cfg` file to be used with `run_MCPU.sh`, a script that streamlines MCPU preparation for Harvard Odyssey users. If you are not on Harvard Odyssey, it is still possible to take `TEMPLATE.cfg` and create your own `cfg` from it by editing all lines that contain `VAR`.
@@ -114,7 +114,7 @@ Contains weights for different energy terms (see publications [1], [3]):
 ### 4. Compile and run
 The command for code compiling (within src_mpi directory):
 
-	gcc -c rng.c
+	gcc -03 -c rng.c
     mpicc -O3 -o fold_potential_mpi backbone.c -lm rng.o
 
 To run:

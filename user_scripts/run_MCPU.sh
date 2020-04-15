@@ -32,7 +32,7 @@ produce_para_remc.pl
 
 The number of processors dictates the temperature range of the
 simulation because delta T is 0.1, with the
-starting temperature being 0.1. So -n 32 is 0.2 to 3.2
+starting temperature being 0.1. So -n 32 is 0.1 to 3.2
 
 @author: victor zhao yzhao01@g.harvard.edu
 EOF
@@ -40,23 +40,20 @@ EOF
 # fixed params:
 MCPU_PATH=/n/home00/vzhao/opt/MCPU
 
-THREE_TO_ONE=${MCPU_PATH}/user_scripts/three_to_one.sed
+THREE_TO_ONE="${MCPU_PATH}/user_scripts/three_to_one.sed"
 
-# below script assumes no spaces or other weirdness in MCPU_PATH
-MCPU_CFG_TEMPLATE=${MCPU_PATH}/src_mpi/TEMPLATE.cfg
+MCPU_CFG_TEMPLATE="${MCPU_PATH}/src_mpi/TEMPLATE.cfg"
 # within MCPU, files src_mpi/TEMPLATE.cfg has been edited
 #  to accomodate this script.
 
-: ${PARTITION:=shakhnovich}     # this parameter can be changed by running 
-                                #   this script like this:
-                                # PARTITION=mypartition ./run_MCPU.sh [...]
-MEMPERCPU=2048
-ALLOCTIME=1440			# 24 hours
-NPROC=32
-NRUNS=1
-LENGTH=2000000
-EVERY=10                        # Every N runs will save structure trajectories
-OUTFREQ=100000                  # print pdb file freq
+: ${PARTITION:=shakhnovich,shakgpu,shared}
+: ${MEMPERCPU:=500}
+: ${ALLOCTIME:=1440}			# 24 hours
+: ${NPROC:=32}
+: ${NRUNS:=1}
+: ${LENGTH:=2000000}
+: ${EVERY:=10}                        # Every N runs will save structure trajectories
+: ${OUTFREQ:=100000}                  # print pdb file freq
 
 # input arguments
 while getopts ":hn:N:l:e:o:" opt; do
@@ -89,8 +86,8 @@ if [ ! -f "${input_protein}" ]; then
     exit 10
 fi
 
-input_directory=$(readlink -f $(dirname "$input_protein"))
-fileroot=$(basename "${input_protein}" .pdb)
+input_directory="$(readlink -f $(dirname "$input_protein"))"
+fileroot="$(basename "${input_protein}" .pdb)"
 input_prefix="${input_directory}/${fileroot}"
 
 if [ ! -d "${output_directory}" ]; then
@@ -100,10 +97,11 @@ output_directory=$(readlink -f ${output_directory})
 
 # --------------------------------------------------
 # Modules
-source new-modules.sh
 module purge
-module load gcc/6.3.0-fasrc01
-module load openmpi/2.1.0-fasrc01
+source centos7-modules.sh
+module load \
+       gcc/7.1.0-fasrc01 \
+       openmpi/2.1.0-fasrc02 \
 
 # Begin --------------------------------------------------
 
@@ -179,11 +177,12 @@ for ((i=0; i<$NRUNS; i++)); do
 	
     echo "Now run program."
     sbatch -p $PARTITION -n $NPROC -t $ALLOCTIME --mem-per-cpu $MEMPERCPU \
-	   -J "MCPU_R${i}_${fileroot}" \
-	   -o "submit_MCPU_${fileroot}_run${i}.log" \
+	   -J "MCPU_${fileroot}_R${i}" \
+	   -o "MCPU_${fileroot}_run${i}.slurm" \
 	   --wrap "mpiexec -n $NPROC ./fold_potential_mpi cfg"
 
     echo "Job submitted, output: ${subdirectory}"
+    sleep 0.5
 done
 
 <<NOTES

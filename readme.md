@@ -137,8 +137,8 @@ To run:
 where each processor runs a simulation at a different temperature (32 temperatures were used in ref. [1] for DHFR unfolding)
 
 ## Data analysis
-Output PDB file names look like: file-prefix_temperature.MCstep
-One log file is output for each simulation temperature: file-prefix_temperature.log
+Output PDB file names look like: `file-prefix_temperature.MCstep`
+One log file is output for each simulation temperature: `file-prefix_temperature.log`
 Each log file contains:
 total energy (energy), contact number (contact), and rmsd from native structure (rmsd)
 which can be used to obtain simulated melting curves (see publication [2]).

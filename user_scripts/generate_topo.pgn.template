@@ -1,7 +1,9 @@
+# -*- tcl -*-
 package require psfgen
 topology top_all27_prot_lipid.inp
 pdbalias residue HIS HSE
 pdbalias atom ILE CD1 CD
+pdbalias atom ARG OXT OT2
 segment A {pdb INPDBXXX}
 coordpdb INPDBXXX A
 guesscoord

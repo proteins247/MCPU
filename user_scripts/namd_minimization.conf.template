@@ -10,7 +10,7 @@ dcdfreq		1000
 
 # force field
 paratypecharmm	on
-parameters	par_all27_prot_lipid.inp
+parameters	../par_all27_prot_lipid.inp
 exclude		scaled1-4
 1-4scaling	1.0
 

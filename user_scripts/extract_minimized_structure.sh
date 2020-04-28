@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# ./extract_minimized_structure.sh structure_dir trajectory_dir output_dir
 
 <<'EOF'
 
@@ -13,8 +12,13 @@ EOF
 
 echo extract_minimized_structure.sh; echo
 
-. new-modules.sh
-module add vmd/1.9.1-fasrc01
+if [ $# -ne 3 ]; then
+    echo "./extract_minimized_structure.sh structure_dir trajectory_dir output_dir"
+    exit 1
+fi
+
+module purge
+module add vmd/1.9.3-fasrc01
 
 structure_directory=$1
 trajectory_directory=$2
@@ -22,8 +26,7 @@ output_directory=$3
 template=/n/home00/vzhao/opt/MCPU/user_scripts/EXTRACT_PDB.TCL.template
 
 if [ ! -d "${output_directory}" ]; then
-    echo "Output directory does not exist, exiting"
-    exit 10
+    mkdir -p "${output_directory}"
 fi
 
 for pdb in ${structure_directory}/*pdb; do

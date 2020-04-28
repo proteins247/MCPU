@@ -6,19 +6,19 @@ generates topology files for pdb files in a directory.
 
 EOF
 
-# ./run_psfgen.sh structure_input_directory output_directory
-echo run_psfgen.sh; echo
+if [ $# -ne 2 ]; then
+    echo './run_psfgen.sh structure_input_directory output_directory'
+    exit 1
+fi
 
-. new-modules.sh
-module add vmd/1.9.1-fasrc01
+module add vmd/1.9.3-fasrc01
 
 input_directory=$1
 output_directory=$2
-template="/n/home00/vzhao/opt/MCPU/user_scripts/generate_topo_template.pgn"
+: ${template:="/n/home00/vzhao/opt/MCPU/user_scripts/generate_topo.pgn.template"}
 
 if [ ! -d "${output_directory}" ]; then
-    echo "Output directory does not exist, exiting"
-    exit 10
+    mkdir -p "${output_directory}"
 fi
 
 for pdb in ${input_directory}/*pdb; do
